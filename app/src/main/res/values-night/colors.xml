@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_primary">#FFFF6633</color>
+
+    <color name="tile">@color/black</color>
+    <color name="background">@color/dark_gray</color>
+    <color name="text">@color/white</color>
+    <color name="text_background">#88000000</color>
+</resources>

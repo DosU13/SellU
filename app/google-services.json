@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "605173222217",
+    "project_id": "sellu-8c200",
+    "storage_bucket": "sellu-8c200.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:605173222217:android:eb17616826edd47060a898",
+        "android_client_info": {
+          "package_name": "com.dosu.sellu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "605173222217-vi7neo3qcqdliaflrljhmsed8jpc2r2l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dosu.sellu",
+            "certificate_hash": "2643b44f991a588cab0a7332028a3b0998a6e25b"
+          }
+        },
+        {
+          "client_id": "605173222217-2b51olleneu48r82jms1e5nbit3ko89q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIgpckrSubVxPgy12R1bLzFM-K1AfP4Ug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "605173222217-2b51olleneu48r82jms1e5nbit3ko89q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

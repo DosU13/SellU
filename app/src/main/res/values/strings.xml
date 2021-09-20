@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Ваш товар</string>
+    <string name="title_home">@string/app_name</string>
+    <string name="title_products">Товары</string>
+    <string name="title_selling">Продажа</string>
+    <string name="title_history">История</string>
+    <string name="title_user_profile">Профиль</string>
+    <string name="any">Любой</string>
+    <string name="check">just checking</string>
+    <string name="insert">ввывод</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="product_image">Картинка товара</string>
+    <string name="product_name">Названия товара</string>
+    <string name="text_quantity">кол:</string>
+    <string name="text_prize">цена:</string>
+    <string name="add_product">Добавить новый товар</string>
+    <string name="product_name_example">Пшеничный хлеб</string>
+    <string name="product_description">Допольнително о товаре</string>
+    <string name="product_description_example">Привезено 21/08/2021, срок годности 3 дня</string>
+    <string name="product_prize_example">18.00</string>
+    <string name="product_quantity_example">80</string>
+    <string name="product_quantity_long">количество</string>
+    <string name="camera">Камера</string>
+    <string name="photos">Из памяти</string>
+    <string name="successfully_added">\" успешно добавлен\"</string>
+    <string name="own_value">Своя цена</string>
+    <string name="another_value">Другая сумма</string>
+    <string name="sell">Продать</string>
+    <string name="minus">-</string>
+    <string name="plus">+</string>
+    <string name="selling_succeed">Продожа успешно завершенно</string>
+    <string name="max_5_img">Максимум 5 картинок</string>
+    <string name="unknown_product">Не извезный</string>
+    <string name="total_amount">Общая сумма к Оплате:</string>
+    <string name="sign_in">sign in</string>
+    <string name="sign_out">Sign out</string>
+    <string name="guest">Гость</string>
+    <string name="guest_email_text">Создайте аккаунт, чтобы использовть программы на разных устройствах</string>
+</resources>
