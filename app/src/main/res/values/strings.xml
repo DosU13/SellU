@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Ваш товар</string>
     <string name="title_home">@string/app_name</string>
-    <string name="title_products">Товары</string>
+    <string name="title_products">Склад</string>
     <string name="title_selling">Продажа</string>
     <string name="title_history">История</string>
     <string name="title_user_profile">Профиль</string>
@@ -37,4 +37,8 @@
     <string name="sign_out">Sign out</string>
     <string name="guest">Гость</string>
     <string name="guest_email_text">Создайте аккаунт, чтобы использовть программы на разных устройствах</string>
+    <string name="som">сом</string>
+    <string name="change">Изменить</string>
+    <string name="text_own_prize">своя цена:</string>
+    <string name="change_product">Сохранить изменение</string>
 </resources>

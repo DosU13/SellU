@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="15dp"
     android:background="@color/background"
     tools:context=".ui.products.add_product.AddProductActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:orientation="vertical">
 
     <LinearLayout
         android:background="@drawable/tile"
@@ -78,55 +82,103 @@
             android:layout_marginStart="5dp"/>
     </LinearLayout>
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:background="@drawable/tile"
-        android:id="@+id/edit_name"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:autofillHints="@string/product_name_example"
-        android:inputType="text"
-        android:hint="@string/product_name"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:paddingBottom="5dp"
+        android:hint="@string/product_name">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:background="@drawable/tile"
-        android:id="@+id/edit_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxHeight="200dp"
+        android:layout_marginBottom="5dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:paddingBottom="5dp"
         android:autofillHints="@string/product_description_example"
-        android:hint="@string/product_description"
-        android:inputType="textMultiLine"
-        android:gravity="top" />
+        android:hint="@string/product_description">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:background="@drawable/tile"
-        android:id="@+id/edit_prize"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:paddingBottom="5dp"
         android:hint="@string/text_prize"
-        android:autofillHints="@string/product_prize_example"
-        android:inputType="number"/>
+        android:autofillHints="@string/product_prize_example">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_prize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:background="@drawable/tile"
-        android:id="@+id/edit_quantity"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:autofillHints="@string/product_quantity_example"
-        android:hint="@string/product_quantity_long"
-        android:inputType="numberDecimal"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:paddingBottom="5dp"
+        android:hint="@string/text_own_prize"
+        android:autofillHints="@string/product_prize_example">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_onw_prize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <Space
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:background="@drawable/tile"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:paddingBottom="5dp"
+        android:autofillHints="@string/product_quantity_example"
+        android:hint="@string/product_quantity_long">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/add_product_complete"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="10dp"
         android:text="@string/add_product"/>
+    </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

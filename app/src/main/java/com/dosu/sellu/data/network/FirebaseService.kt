@@ -29,8 +29,24 @@ class FirebaseService {
         return db.collection(productsRef).get().await().documents.mapNotNull { it.toProduct()}
     }
 
+    suspend fun getProduct(productId: String): Product {
+        return db.collection(productsRef).document(productId).get().await().toProduct()!!
+    }
+
     suspend fun addProduct(product: ProductWithoutId): String {
         return db.collection(productsRef).add(product).await().id
+    }
+
+    suspend fun updateProductDetails(productId: String, name: String, numOfImages: Long, description: String,
+                                     prize: Double, ownPrize: Double, quantity: Long){
+        db.collection(productsRef).document(productId).update(
+            "name", name, "numOfImages", numOfImages, "description", description,
+            "prize", prize, "ownPrize", ownPrize, "quantity", quantity).await()
+    }
+
+    suspend fun updateProductQuantity(productId: String, newQuantityMinus: Int) {
+        val oldQuantity: Long = db.collection(productsRef).document(productId).get().await().toProduct()!!.quantity
+        db.collection(productsRef).document(productId).update("quantity", oldQuantity-newQuantityMinus)
     }
 
     suspend fun getSelling(): List<Selling>{
@@ -39,11 +55,6 @@ class FirebaseService {
 
     fun addSelling(selling: SellingWithoutId){
         db.collection(sellingRef).add(selling)
-    }
-
-    suspend fun updateProductQuantity(productId: String, newQuantityMinus: Int) {
-        val oldQuantity: Long = db.collection(productsRef).document(productId).get().await().toProduct()!!.quantity
-        db.collection(productsRef).document(productId).update("quantity", oldQuantity-newQuantityMinus)
     }
 
     fun uploadImage(refString: String, byteArray: ByteArray){

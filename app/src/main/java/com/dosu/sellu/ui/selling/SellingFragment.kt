@@ -12,12 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dosu.sellu.R
 import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.databinding.SellingFragmentBinding
+import com.dosu.sellu.ui.products.util.ImageListener
 import com.dosu.sellu.ui.products.util.ProductsListener
-import com.dosu.sellu.ui.products.util.ProductsRecyclerViewAdapter
 import com.dosu.sellu.ui.products.viewmodel.ProductsViewModel
 import com.dosu.sellu.ui.products.viewmodel.ProductsViewModelFactory
-import com.dosu.sellu.ui.selling.util.SellingRecyclerViewAdapter
 import com.dosu.sellu.ui.selling.util.AddSellingListener
+import com.dosu.sellu.ui.selling.util.SellingRecyclerViewAdapter
 import com.dosu.sellu.ui.selling.viewmodel.SellingViewModel
 import com.dosu.sellu.ui.selling.viewmodel.SellingViewModelFactory
 import com.dosu.sellu.util.ErrorResponse
@@ -27,7 +27,7 @@ import org.kodein.di.DIAware
 import org.kodein.di.android.x.closestDI
 import org.kodein.di.instance
 
-class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListener {
+class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListener, ImageListener {
     private var _binding: SellingFragmentBinding? = null
     private val binding get() = _binding!!
     override val di: DI by closestDI()
@@ -43,7 +43,8 @@ class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListene
         sellingViewModel = ViewModelProvider(this, sellingViewModelFactory).get(SellingViewModel::class.java)
         sellingViewModel.setListener(this)
         productsViewModel = ViewModelProvider(this, productsViewModelFactory).get(ProductsViewModel::class.java)
-        productsViewModel.setListener(this)
+        productsViewModel.setListener(this as ProductsListener)
+        productsViewModel.setListener(this as ImageListener)
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
