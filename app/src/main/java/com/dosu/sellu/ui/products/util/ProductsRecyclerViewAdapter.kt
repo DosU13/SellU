@@ -1,8 +1,10 @@
 package com.dosu.sellu.ui.products.util
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.text.InputType
 import android.text.SpannableString
 import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
@@ -10,10 +12,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
@@ -47,12 +46,13 @@ class ProductsRecyclerViewAdapter(private val context: Context?, private val vie
         val quantity = SpannableString(quantityStr)
         quantity.setSpan(RelativeSizeSpan(2f), 5, quantityStr.length, 0)
         holder.quantity.text = quantity
-        setClickAction(position, holder)
+        holder.addBtn.setOnClickListener { showDialog(product) }
+        setExpandAction(position, holder)
     }
 
     private var expandedPos = -1
     @SuppressLint("NotifyDataSetChanged")
-    private fun setClickAction(pos: Int, holder: ViewHolder){
+    private fun setExpandAction(pos: Int, holder: ViewHolder){
         val isExpanded = expandedPos == pos
         holder.details.visibility = if(isExpanded) VISIBLE else GONE
         holder.details.isActivated = isExpanded
@@ -90,11 +90,27 @@ class ProductsRecyclerViewAdapter(private val context: Context?, private val vie
         return products.size
     }
 
+    private fun showDialog(product: Product){
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(context?.getString(R.string.add_quantity_dialog_title)+" "+product.name)
+        val input = EditText(context)
+        input.setHint(R.string.add_quantity_dialog_hint)
+        input.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+        builder.setView(input)
+        builder.setPositiveButton(R.string.add_quantity_ok) {_, _ ->
+            val v = input.text.toString().toInt()
+            viewModel.updateProductQuantity(product.productId, v)
+        }
+        builder.setNegativeButton(R.string.add_quantity_cancel) { dialog, _ -> dialog.cancel() }
+        builder.show()
+    }
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.product_name)
         val image: ImageView = itemView.findViewById(R.id.product_image)
         val quantity: TextView = itemView.findViewById(R.id.quantity)
         val prize: TextView = itemView.findViewById(R.id.prize)
+        val addBtn: Button = itemView.findViewById(R.id.add_btn)
         val expBtn: Button = itemView.findViewById(R.id.product_expand_btn)
         val details: LinearLayout = itemView.findViewById(R.id.details)
 

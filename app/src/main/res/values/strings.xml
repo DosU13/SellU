@@ -40,5 +40,9 @@
     <string name="som">сом</string>
     <string name="change">Изменить</string>
     <string name="text_own_prize">своя цена:</string>
-    <string name="change_product">Сохранить изменение</string>
+    <string name="change_product_btn">Сохранить изменение</string>
+    <string name="add_quantity_dialog_title">Добавить продуктов</string>
+    <string name="add_quantity_dialog_hint">Сколько количество добавить</string>
+    <string name="add_quantity_ok">Добавить</string>
+    <string name="add_quantity_cancel">Отмена</string>
 </resources>

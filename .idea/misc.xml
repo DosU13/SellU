@@ -3,12 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/drawable/add_button.xml" value="0.290625" />
+        <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/drawable/add_filled_circle.xml" value="0.290625" />
+        <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/drawable/add_square.xml" value="0.290625" />
+        <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/drawable/circle_cropper.xml" value="0.290625" />
         <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/drawable/comment_background.xml" value="0.290625" />
+        <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/drawable/ic_baseline_add_circle_24.xml" value="0.290625" />
+        <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/drawable/square.xml" value="0.290625" />
+        <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/drawable/subtract_square.xml" value="0.290625" />
         <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/drawable/tile.xml" value="0.290625" />
         <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/layout/activity_add_product.xml" value="0.176" />
         <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/layout/fragment_product_details.xml" value="0.25226449275362317" />
         <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/layout/fragment_product_item.xml" value="0.25226449275362317" />
+        <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/layout/fragment_product_item_in_selling.xml" value="0.2740036231884058" />
         <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/layout/products_fragment.xml" value="0.536" />
+        <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/layout/selling_fragment.xml" value="0.2740036231884058" />
         <entry key="..\:/Users/dosla/AndroidStudioProjects/SellU/app/src/main/res/layout/user_profile_fragment.xml" value="0.16802536231884058" />
       </map>
     </option>

@@ -44,7 +44,7 @@ class AddProductActivity : AppCompatActivity(), DIAware, AddProductListener, Ima
         isNewProduct = intent.getBooleanExtra("isNewProduct", true)
         if(!isNewProduct) {
             intent.getStringExtra("productId")?.let { productsViewModel.getProduct(it) }
-            binding.addProductComplete.text = getString(R.string.change_product)
+            binding.addProductComplete.text = getString(R.string.change_product_btn)
         }
         binding.imageStorage.setOnClickListener { imageFromGalleryPressed() }
         binding.addProductComplete.setOnClickListener{finishBtnClicked()}

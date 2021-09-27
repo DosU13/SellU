@@ -44,9 +44,9 @@ class FirebaseService {
             "prize", prize, "ownPrize", ownPrize, "quantity", quantity).await()
     }
 
-    suspend fun updateProductQuantity(productId: String, newQuantityMinus: Int) {
+    suspend fun updateProductQuantity(productId: String, addedQuantity: Int) {
         val oldQuantity: Long = db.collection(productsRef).document(productId).get().await().toProduct()!!.quantity
-        db.collection(productsRef).document(productId).update("quantity", oldQuantity-newQuantityMinus)
+        db.collection(productsRef).document(productId).update("quantity", oldQuantity+addedQuantity)
     }
 
     suspend fun getSelling(): List<Selling>{

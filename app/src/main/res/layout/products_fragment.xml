@@ -21,6 +21,6 @@
         android:contentDescription="@string/add_product"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/ic_baseline_add_circle_24"
-        android:tint="@color/color_primary"/>
+        android:src="@drawable/add_filled_circle"
+        android:tint="@color/tile"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

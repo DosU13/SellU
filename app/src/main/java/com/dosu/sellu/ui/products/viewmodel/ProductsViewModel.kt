@@ -63,6 +63,13 @@ class ProductsViewModel(private val productRepository: ProductRepository) : View
         }
     }
 
+    fun updateProductQuantity(productId: String, addedQuantity: Int) = viewModelScope.launch {
+        when(val response = productRepository.updateProductQuantity(productId, addedQuantity)){
+            is NetworkResponse.Success -> productsListener.updateProductSucceed()
+            is NetworkResponse.Failure -> productsListener.anyError(response.errorCode, response.errorBody)
+        }
+    }
+
     fun downloadImages(productId: String, numOfImages: Int){
         for(i in 0 until numOfImages){
             downloadImage(productId, i)

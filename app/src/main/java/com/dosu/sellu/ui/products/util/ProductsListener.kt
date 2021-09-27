@@ -5,5 +5,6 @@ import com.dosu.sellu.util.ErrorResponse
 
 interface ProductsListener {
     fun getProducts(products: List<Product>)
+    fun updateProductSucceed()
     fun anyError(code: Int?, responseBody: ErrorResponse?)
 }

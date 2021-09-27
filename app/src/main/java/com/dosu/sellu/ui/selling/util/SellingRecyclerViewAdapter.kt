@@ -1,6 +1,8 @@
 package com.dosu.sellu.ui.selling.util
 
 import android.content.Context
+import android.text.SpannableString
+import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +16,7 @@ import com.dosu.sellu.ui.products.viewmodel.ProductsViewModel
 import com.dosu.sellu.ui.selling.viewmodel.SellingViewModel
 
 class SellingRecyclerViewAdapter(
-    context: Context?,
+    private val context: Context?,
     private val productsViewModel: ProductsViewModel,
     private val sellingViewModel: SellingViewModel)
                             : RecyclerView.Adapter<SellingRecyclerViewAdapter.ViewHolder>() {
@@ -30,7 +32,9 @@ class SellingRecyclerViewAdapter(
         val p = products[position]
         productsViewModel.downloadImage(p.productId, 0)
         holder.productName.text = p.name
-        holder.prize.text = p.prize.toString()
+        val prize = SpannableString("${p.prize} ${context?.getString(R.string.som)}")
+        prize.setSpan(RelativeSizeSpan(2f), 0,p.prize.toInt().toString().length, 0)
+        holder.prize.text = prize
         holder.quantityMinus.setOnClickListener {
             sellingViewModel.decreaseQuantity(p.productId)
             holder.quantity.text = sellingViewModel.getSellingQuantity(p.productId).toString()
@@ -52,8 +56,8 @@ class SellingRecyclerViewAdapter(
         val productName: TextView = itemView.findViewById(R.id.product_name)
         val image: ImageView = itemView.findViewById(R.id.product_image)
         val prize: TextView = itemView.findViewById(R.id.prize)
-        val quantityMinus: TextView = itemView.findViewById(R.id.quantity_minus)
-        val quantityPlus: TextView = itemView.findViewById(R.id.quantity_plus)
+        val quantityMinus: ImageView = itemView.findViewById(R.id.quantity_minus)
+        val quantityPlus: ImageView = itemView.findViewById(R.id.quantity_plus)
         val quantity: TextView = itemView.findViewById(R.id.quantity)
         val expandBtn: Button = itemView.findViewById(R.id.product_expand_btn)
     }

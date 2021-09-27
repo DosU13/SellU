@@ -27,8 +27,8 @@ class ProductRepository(private val firebaseService: FirebaseService): BaseRepos
         firebaseService.updateProductDetails(productId, name, numOfImages, description, prize, ownPrize, quantity)
     }
 
-    suspend fun updateProductQuantity(productId: String, newQuantityMinus: Int) = safeApiCall {
-        firebaseService.updateProductQuantity(productId, newQuantityMinus)
+    suspend fun updateProductQuantity(productId: String, addedQuantity: Int) = safeApiCall {
+        firebaseService.updateProductQuantity(productId, addedQuantity)
     }
 
     suspend fun downloadImage(productId: String, photoIndex: Int) = safeApiCall {

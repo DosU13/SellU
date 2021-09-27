@@ -13,7 +13,7 @@
 
     <item
         android:id="@+id/navigation_selling"
-        android:icon="@drawable/ic_baseline_add_circle_24"
+        android:icon="@drawable/add_filled_circle"
         android:title="@string/title_selling" />
 
     <item

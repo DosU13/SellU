@@ -86,6 +86,10 @@ class ProductsFragment : Fragment(), DIAware, ProductsListener, ImageListener {
         }
     }
 
+    override fun updateProductSucceed() {
+        adapter.notifyDataSetChanged()
+    }
+
     override fun anyError(code: Int?, responseBody: ErrorResponse?) {
         Toast.makeText(context, "any error called", Toast.LENGTH_LONG).show()
     }

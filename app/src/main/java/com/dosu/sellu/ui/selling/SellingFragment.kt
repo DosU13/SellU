@@ -82,6 +82,10 @@ class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListene
         adapter.notifyDataSetChanged()
     }
 
+    override fun updateProductSucceed() {
+        adapter.notifyDataSetChanged()
+    }
+
     private var summaryPrize = 0.0
     @SuppressLint("SetTextI18n")
     override fun getSummaryPrize(prize: Double) {

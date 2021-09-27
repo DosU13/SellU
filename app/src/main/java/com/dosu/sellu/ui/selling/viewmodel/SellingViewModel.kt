@@ -66,8 +66,8 @@ class SellingViewModel(private val sellingRepository: SellingRepository, private
         }
     }
 
-    private fun updateProductQuantity(productId: String, newQuantityMinus: Int) = viewModelScope.launch{
-        when(val response = productRepository.updateProductQuantity(productId, newQuantityMinus)){
+    private fun updateProductQuantity(productId: String, addedQuantity: Int) = viewModelScope.launch{
+        when(val response = productRepository.updateProductQuantity(productId, addedQuantity)){
             is NetworkResponse.Failure -> addListener.anyError(response.errorCode, response.errorBody)
         }
     }
@@ -76,7 +76,7 @@ class SellingViewModel(private val sellingRepository: SellingRepository, private
         when(val response = sellingRepository.addSelling(selling)){
             is NetworkResponse.Success -> {
                 addListener.addSellingSucceed()
-                for(q in sellingQuantities) updateProductQuantity(q.key, q.value)
+                for(q in sellingQuantities) updateProductQuantity(q.key, -q.value)
                 sellingQuantities = mutableMapOf()
             }
             is NetworkResponse.Failure -> addListener.anyError(response.errorCode, response.errorBody)
