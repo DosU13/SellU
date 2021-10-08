@@ -44,9 +44,10 @@ class HistoryRecyclerViewAdapter(private val context: Context?)
     }
 
     fun updateSectionedList(newSellingList: List<HistorySelling>) {
-        sellingList = newSellingList.sortedWith { s1, s2 ->
-            if(s1.timeInMillis < s2.timeInMillis) 1 else -1
-        }
+//        sellingList = newSellingList.sortedWith { s1, s2 ->
+//            if(s1.timeInMillis < s2.timeInMillis) 1 else -1
+//        }
+        sellingList = newSellingList
         sectionList = mutableListOf()
         var headerStrIt = context!!.getString(R.string.today)
         for((ind, s) in sellingList.withIndex()){

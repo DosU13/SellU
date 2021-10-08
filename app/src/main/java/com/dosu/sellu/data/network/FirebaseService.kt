@@ -7,7 +7,9 @@ import com.dosu.sellu.data.network.selling.model.Selling
 import com.dosu.sellu.data.network.selling.model.Selling.Companion.toSelling
 import com.dosu.sellu.data.network.selling.model.SellingWithoutId
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
@@ -45,21 +47,20 @@ class FirebaseService {
     }
 
     suspend fun updateProductQuantity(productId: String, addedQuantity: Int) {
-        val oldQuantity: Long = db.collection(productsRef).document(productId).get().await().toProduct()!!.quantity
-        db.collection(productsRef).document(productId).update("quantity", oldQuantity+addedQuantity)
+        db.collection(productsRef).document(productId).update("quantity", FieldValue.increment(addedQuantity.toLong())).await()
     }
 
-    suspend fun getSelling(): List<Selling>{
-        return db.collection(sellingRef).get().await().documents.mapNotNull { it.toSelling() }
+    suspend fun getSellingList(): List<Selling>{
+        return db.collection(sellingRef).orderBy("time", Query.Direction.DESCENDING).get().await().documents.mapNotNull { it.toSelling() }
     }
 
-    fun addSelling(selling: SellingWithoutId){
-        db.collection(sellingRef).add(selling)
+    suspend fun addSelling(selling: SellingWithoutId){
+        db.collection(sellingRef).add(selling).await()
     }
 
-    fun uploadImage(refString: String, byteArray: ByteArray){
+    suspend fun uploadImage(refString: String, byteArray: ByteArray){
         val imgRef = storageRef.child(IMG_REF+refString)
-        imgRef.putBytes(byteArray)
+        imgRef.putBytes(byteArray).await()
     }
 
     suspend fun downloadImage(refString: String): ByteArray{

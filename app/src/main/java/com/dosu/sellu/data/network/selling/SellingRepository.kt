@@ -6,7 +6,7 @@ import com.dosu.sellu.util.BaseRepository
 
 class SellingRepository(private val firebaseService: FirebaseService): BaseRepository() {
     suspend fun getSellingList() = safeApiCall {
-        firebaseService.getSelling()
+        firebaseService.getSellingList()
     }
 
     suspend fun addSelling(selling: SellingWithoutId) = safeApiCall {
