@@ -15,15 +15,15 @@ import kotlinx.coroutines.launch
 class SellingViewModel(private val sellingRepository: SellingRepository, private val productRepository: ProductRepository) : ViewModel(){
     private lateinit var addListener: AddSellingListener
 
-    var sellingQuantities: MutableMap<String, Int> = mutableMapOf()
+    private var sellingQuantities = mutableMapOf<String, Int>()
 
     fun setListener(listener: AddSellingListener){
         addListener = listener
     }
 
     fun getSellingQuantity(productId: String): Int {
-        return if (sellingQuantities.containsKey(productId)) sellingQuantities[productId]!!
-                else 0
+        return if(sellingQuantities.containsKey(productId)) sellingQuantities[productId]!!
+        else 0
     }
 
     fun decreaseQuantity(productId: String){

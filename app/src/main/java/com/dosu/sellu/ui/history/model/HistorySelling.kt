@@ -2,12 +2,17 @@ package com.dosu.sellu.ui.history.model
 
 import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.data.network.selling.model.Selling
-import com.google.firebase.Timestamp
+import com.dosu.sellu.util.date
+import com.dosu.sellu.util.hmm
+import java.util.*
 
 data class HistorySelling(
     val sellingId: String,
     val products: Map<Product?, Int>,
-    val time: Timestamp,
+    val dayComparator: Long,
+    val timeInMillis: Long,
+    val dateStr: String,
+    val timeStr: String,
     val prize: Double,
     val newPrize: Double?,
     val newPrizeReason: String?
@@ -20,7 +25,11 @@ data class HistorySelling(
                 val product = allProducts.find{p -> p.productId==id}
                 hProducts[product] = quantity
             }
-            return HistorySelling(sellingId, hProducts, time, prize, newPrize, newPrizeReason)
+            val cal = Calendar.getInstance()
+            cal.time = time.toDate()
+            val dayComparator: Long = 512L*(cal.get(Calendar.YEAR)-1970) + cal.get(Calendar.DAY_OF_YEAR)
+            val timeInMillis = cal.timeInMillis
+            return HistorySelling(sellingId, hProducts, dayComparator, timeInMillis, time.date, time.hmm, prize, newPrize, newPrizeReason)
         }
     }
 }

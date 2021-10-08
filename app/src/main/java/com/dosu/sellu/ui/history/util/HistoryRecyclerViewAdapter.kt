@@ -4,43 +4,69 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dosu.sellu.R
 import com.dosu.sellu.ui.history.model.HistorySelling
+import com.dosu.sellu.util.SellU
 
 class HistoryRecyclerViewAdapter(private val context: Context?)
-            : RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder>() {
-    private val mInflater = LayoutInflater.from(context)
+            : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var sellingList: List<HistorySelling> = emptyList()
+    private var sectionList: MutableList<Section> = mutableListOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = mInflater.inflate(R.layout.fragment_selling_item, parent, false)
-        return ViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if(viewType == HEADER){
+            val view = LayoutInflater.from(context).inflate(R.layout.fragment_history_header, parent, false)
+            HeaderViewHolder(view)
+        }else {
+            val view = LayoutInflater.from(context).inflate(R.layout.fragment_history_item, parent, false)
+            HistoryRecyclerViewViewHolder(view)
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val s = sellingList[position]
-        holder.prize.text = s.prize.toString()
-        var productsTxt = ""
-        for(pMap in s.products){
-            val pName = if(pMap.key!=null) pMap.key!!.name else context!!.getString(R.string.unknown_product)
-            productsTxt += if(pMap.value==1) "$pName;"
-            else "${pName}X${pMap.value};"
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if(sectionList[position].viewType == HEADER){
+            val headerVH = holder as HeaderViewHolder
+            headerVH.dateTxt.text = sectionList[position].headerStr
+        }else {
+            val notHeaderVH = holder as HistoryRecyclerViewViewHolder
+            notHeaderVH.bind(sellingList[sectionList[position].sellingInd!!])
         }
-        holder.products.text = productsTxt
-        holder.time.text = s.time.toString()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return sectionList[position].viewType
     }
 
     override fun getItemCount(): Int {
-        return sellingList.size
+        return sectionList.size
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val prize: TextView = itemView.findViewById(R.id.selling_prize)
-        val products: TextView = itemView.findViewById(R.id.products)
-        val time: TextView = itemView.findViewById(R.id.time)
-        val expBtn: Button = itemView.findViewById(R.id.expand_btn)
+    fun updateSectionedList(newSellingList: List<HistorySelling>) {
+        sellingList = newSellingList.sortedWith { s1, s2 ->
+            if(s1.timeInMillis < s2.timeInMillis) 1 else -1
+        }
+        sectionList = mutableListOf()
+        var headerStrIt = context!!.getString(R.string.today)
+        for((ind, s) in sellingList.withIndex()){
+            if(s.dateStr != headerStrIt){
+                headerStrIt = s.dateStr
+                sectionList.add(Section(HEADER, headerStrIt, null))
+            }
+            sectionList.add(Section(NOT_HEADER, null, ind))
+        }
+        notifyDataSetChanged()
+    }
+
+    class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+        val dateTxt: TextView = itemView.findViewById(R.id.date)
+    }
+
+    data class Section(val viewType: Int, val headerStr: String?, val sellingInd: Int?)
+
+    companion object{
+        private const val HEADER = 1
+        private const val NOT_HEADER = 0
     }
 }

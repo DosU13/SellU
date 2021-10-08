@@ -42,8 +42,7 @@ class HistoryFragment : Fragment(), DIAware, HistoryListener {
     }
 
     override fun getSellingList(sellingList: List<HistorySelling>) {
-        adapter.sellingList = sellingList
-        adapter.notifyDataSetChanged()
+        adapter.updateSectionedList(sellingList)
     }
 
     override fun anyError(errorCode: Int?, responseBody: ErrorResponse?) {

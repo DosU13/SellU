@@ -1,6 +1,7 @@
 package com.dosu.sellu.util
 
 import android.app.Application
+import android.content.res.Resources
 import androidx.lifecycle.*
 import com.dosu.sellu.data.network.FirebaseService
 import com.dosu.sellu.data.network.product.ProductRepository
@@ -30,5 +31,19 @@ class SellU : Application(), DIAware {
 
         bind<UserRepository>() with singleton { UserRepository(instance())}
         bind { provider { UserViewModelFactory(instance()) }}
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        sellU = this
+        mResources = resources
+    }
+
+    companion object{
+        private lateinit var sellU: SellU
+        private lateinit var mResources: Resources
+
+        val instance get() = sellU
+        val res get() = mResources
     }
 }

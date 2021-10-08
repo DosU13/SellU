@@ -6,7 +6,6 @@ import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +13,10 @@ import com.dosu.sellu.R
 import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.ui.products.viewmodel.ProductsViewModel
 import com.dosu.sellu.ui.selling.viewmodel.SellingViewModel
+import com.dosu.sellu.util.dp
+import com.dosu.sellu.util.prize
+import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.shape.CornerFamily
 
 class SellingRecyclerViewAdapter(
     private val context: Context?,
@@ -30,11 +33,12 @@ class SellingRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val p = products[position]
+        val radius = 5.0.dp
+        holder.image.shapeAppearanceModel = holder.image.shapeAppearanceModel.toBuilder().
+            setTopLeftCorner(CornerFamily.ROUNDED, radius).setBottomLeftCorner(CornerFamily.ROUNDED, radius).build()
         productsViewModel.downloadImage(p.productId, 0)
         holder.productName.text = p.name
-        val prize = SpannableString("${p.prize} ${context?.getString(R.string.som)}")
-        prize.setSpan(RelativeSizeSpan(2f), 0,p.prize.toInt().toString().length, 0)
-        holder.prize.text = prize
+        holder.prize.text = p.prize.prize
         holder.quantityMinus.setOnClickListener {
             sellingViewModel.decreaseQuantity(p.productId)
             holder.quantity.text = sellingViewModel.getSellingQuantity(p.productId).toString()
@@ -54,11 +58,10 @@ class SellingRecyclerViewAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val productName: TextView = itemView.findViewById(R.id.product_name)
-        val image: ImageView = itemView.findViewById(R.id.product_image)
+        val image: ShapeableImageView = itemView.findViewById(R.id.product_image)
         val prize: TextView = itemView.findViewById(R.id.prize)
         val quantityMinus: ImageView = itemView.findViewById(R.id.quantity_minus)
         val quantityPlus: ImageView = itemView.findViewById(R.id.quantity_plus)
         val quantity: TextView = itemView.findViewById(R.id.quantity)
-        val expandBtn: Button = itemView.findViewById(R.id.product_expand_btn)
     }
 }

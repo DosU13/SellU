@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="color_primary">#FFFF6633</color>
+    <color name="black">#FF000000</color>
+    <color name="dark_gray">#FF444444</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="light_gray">#FFBBBBBB</color>
 
     <color name="tile">@color/black</color>
     <color name="background">@color/dark_gray</color>

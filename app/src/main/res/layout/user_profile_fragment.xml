@@ -24,10 +24,10 @@
             android:src="@drawable/ic_baseline_face_24"
             android:backgroundTint="@color/text"/>
 
-        <ImageView
+        <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/circle_cropper"/>
+            android:background="@drawable/circle_cropper"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Space

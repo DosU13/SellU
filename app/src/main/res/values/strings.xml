@@ -45,4 +45,20 @@
     <string name="add_quantity_dialog_hint">Сколько количество добавить</string>
     <string name="add_quantity_ok">Добавить</string>
     <string name="add_quantity_cancel">Отмена</string>
+    <string name="today">Сегодня</string>
+    <string name="yesterday">Вчера</string>
+    <string-array name="month">
+        <item>Январь</item>
+        <item>Февраль</item>
+        <item>Март</item>
+        <item>Апрель</item>
+        <item>Май</item>
+        <item>Июнь</item>
+        <item>Июль</item>
+        <item>Август</item>
+        <item>Сентабрь</item>
+        <item>Октябрь</item>
+        <item>Ноябрь</item>
+        <item>Декабрь</item>
+    </string-array>
 </resources>

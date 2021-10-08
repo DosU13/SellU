@@ -6,6 +6,12 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.text.SpannableString
+import android.text.format.DateUtils
+import android.text.style.RelativeSizeSpan
+import com.dosu.sellu.R
+import com.google.firebase.Timestamp
+import java.util.*
 
 fun ByteArray.toDrawable(resources: Resources): Drawable {
     return BitmapDrawable(resources, BitmapFactory.decodeByteArray(this, 0, this.size))
@@ -15,6 +21,43 @@ fun Uri.toByteArray(context: Context): ByteArray{
     return context.contentResolver.openInputStream(this)!!.buffered().use { it.readBytes() }  // Me inserted non null but it may appear null, check hear
 }
 
+val Double.dp: Float get() = (this * Resources.getSystem().displayMetrics.density).toFloat()
+
+val Double.prize: SpannableString get() {
+    val span = if(this == this.toInt().toDouble()) SpannableString("${this.toInt()} сом")
+        else SpannableString("$this сом")
+    span.setSpan(RelativeSizeSpan(2f), 0,this.toInt().toString().length, 0)
+    return span
+}
+
+val Timestamp.hmm : String get() {
+    val cal = Calendar.getInstance()
+    cal.time = this.toDate()
+    val h = cal.get(Calendar.HOUR_OF_DAY)
+    val m = cal.get(Calendar.MINUTE)
+    return if(m<10) "$h:0$m"
+    else "$h:$m"
+}
+
+val Timestamp.date : String get() {
+    val cal = Calendar.getInstance()
+    cal.time = this.toDate()
+    return when {
+        DateUtils.isToday(cal.timeInMillis) -> SellU.res.getString(R.string.today)
+        isYesterday(cal.timeInMillis) -> SellU.res.getString(R.string.yesterday)
+        else -> {
+            val mInd = cal.get(Calendar.MONTH)
+            val m = SellU.res.getStringArray(R.array.month)[mInd]
+            val d = cal.get(Calendar.DAY_OF_MONTH)
+            val y = cal.get(Calendar.YEAR)
+            "$m $d $y"
+        }
+    }
+}
+
+fun isYesterday(timeInMillis: Long): Boolean{
+    return DateUtils.isToday(timeInMillis + DateUtils.DAY_IN_MILLIS)
+}
 //import android.app.Activity
 //import android.content.Context
 //import android.graphics.Color

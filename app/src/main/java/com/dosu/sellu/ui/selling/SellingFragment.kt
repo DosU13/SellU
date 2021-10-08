@@ -1,6 +1,7 @@
 package com.dosu.sellu.ui.selling
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -69,6 +70,14 @@ class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListene
         }else {
             sellingViewModel.sell(summaryPrize, null, null)
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val currentNightMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val nightMode = currentNightMode == Configuration.UI_MODE_NIGHT_YES
+        adapter.notifyDataSetChanged()
     }
 
     override fun addSellingSucceed() {

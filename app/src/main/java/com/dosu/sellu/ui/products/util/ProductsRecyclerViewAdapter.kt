@@ -21,6 +21,10 @@ import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.ui.products.ProductDetails
 import com.dosu.sellu.ui.products.add_product.AddProductActivity
 import com.dosu.sellu.ui.products.viewmodel.ProductsViewModel
+import com.dosu.sellu.util.dp
+import com.dosu.sellu.util.prize
+import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.shape.CornerFamily
 
 class ProductsRecyclerViewAdapter(private val context: Context?, private val viewModel: ProductsViewModel)
     : RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder>(){
@@ -34,14 +38,16 @@ class ProductsRecyclerViewAdapter(private val context: Context?, private val vie
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        fragment = ProductDetails()
-
+        //fragment = ProductDetails() remove me
         val product = products[position]
+
+        val radius = 5.0.dp
+        holder.image.shapeAppearanceModel = holder.image.shapeAppearanceModel.toBuilder().
+            setTopLeftCorner(CornerFamily.ROUNDED, radius).setBottomLeftCorner(CornerFamily.ROUNDED, radius).build()
+
         holder.name.text = product.name
         if(product.numOfImages > 0) viewModel.downloadImage(product.productId, 0)
-        val prize = SpannableString("${product.prize} ${context?.getString(R.string.som)}")
-        prize.setSpan(RelativeSizeSpan(2f), 0,product.prize.toInt().toString().length, 0)
-        holder.prize.text = prize
+        holder.prize.text = product.prize.prize
         val quantityStr = "${context?.getString(R.string.text_quantity)} ${product.quantity}"
         val quantity = SpannableString(quantityStr)
         quantity.setSpan(RelativeSizeSpan(2f), 5, quantityStr.length, 0)
@@ -107,7 +113,7 @@ class ProductsRecyclerViewAdapter(private val context: Context?, private val vie
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.product_name)
-        val image: ImageView = itemView.findViewById(R.id.product_image)
+        val image: ShapeableImageView = itemView.findViewById(R.id.product_image)
         val quantity: TextView = itemView.findViewById(R.id.quantity)
         val prize: TextView = itemView.findViewById(R.id.prize)
         val addBtn: Button = itemView.findViewById(R.id.add_btn)

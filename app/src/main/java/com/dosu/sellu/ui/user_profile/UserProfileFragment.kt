@@ -81,8 +81,8 @@ class UserProfileFragment : Fragment(), DIAware, UserListener {
             AuthUI.IdpConfig.GoogleBuilder().build())
         val signInIntent = AuthUI.getInstance().createSignInIntentBuilder()
             .setAvailableProviders(providers)
-            .setAlwaysShowSignInMethodScreen(true)
-            .enableAnonymousUsersAutoUpgrade().build()
+            .setAlwaysShowSignInMethodScreen(true).build()
+            //.enableAnonymousUsersAutoUpgrade().build()
         signInLauncher.launch(signInIntent)
     }
     private val signInLauncher = registerForActivityResult(FirebaseAuthUIActivityResultContract()){ result->
