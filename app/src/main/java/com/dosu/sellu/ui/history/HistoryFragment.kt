@@ -8,9 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dosu.sellu.data.network.product.model.Product
+import com.dosu.sellu.data.network.selling.model.Selling
 import com.dosu.sellu.databinding.HistoryFragmentBinding
 import com.dosu.sellu.ui.history.util.HistoryListener
-import com.dosu.sellu.ui.history.model.HistorySelling
 import com.dosu.sellu.ui.history.util.HistoryRecyclerViewAdapter
 import com.dosu.sellu.ui.history.viewmodel.HistoryViewModel
 import com.dosu.sellu.ui.history.viewmodel.HistoryViewModelFactory
@@ -41,8 +42,8 @@ class HistoryFragment : Fragment(), DIAware, HistoryListener {
         return binding.root
     }
 
-    override fun getSellingList(sellingList: List<HistorySelling>) {
-        adapter.updateSectionedList(sellingList)
+    override fun getSellingList(products: List<Product>, sellingList: List<Selling>) {
+        adapter.updateSectionedList(products, sellingList)
     }
 
     override fun anyError(errorCode: Int?, responseBody: ErrorResponse?) {

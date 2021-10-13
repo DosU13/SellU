@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dosu.sellu.R
-import com.dosu.sellu.ui.history.model.HistorySelling
-import com.dosu.sellu.util.SellU
+import com.dosu.sellu.data.network.product.model.Product
+import com.dosu.sellu.data.network.selling.model.Selling
+import com.dosu.sellu.util.date
 
 class HistoryRecyclerViewAdapter(private val context: Context?)
             : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    var sellingList: List<HistorySelling> = emptyList()
+    private lateinit var sellingList: List<Selling>
+    private lateinit var products: List<Product>
     private var sectionList: MutableList<Section> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -31,7 +33,7 @@ class HistoryRecyclerViewAdapter(private val context: Context?)
             headerVH.dateTxt.text = sectionList[position].headerStr
         }else {
             val notHeaderVH = holder as HistoryRecyclerViewViewHolder
-            notHeaderVH.bind(sellingList[sectionList[position].sellingInd!!])
+            notHeaderVH.bind(sellingList[sectionList[position].sellingInd!!], products)
         }
     }
 
@@ -43,16 +45,14 @@ class HistoryRecyclerViewAdapter(private val context: Context?)
         return sectionList.size
     }
 
-    fun updateSectionedList(newSellingList: List<HistorySelling>) {
-//        sellingList = newSellingList.sortedWith { s1, s2 ->
-//            if(s1.timeInMillis < s2.timeInMillis) 1 else -1
-//        }
-        sellingList = newSellingList
+    fun updateSectionedList(products: List<Product>, sellingList: List<Selling>) {
+        this.products = products
+        this.sellingList = sellingList
         sectionList = mutableListOf()
         var headerStrIt = context!!.getString(R.string.today)
         for((ind, s) in sellingList.withIndex()){
-            if(s.dateStr != headerStrIt){
-                headerStrIt = s.dateStr
+            if(s.time.date != headerStrIt){
+                headerStrIt = s.time.date
                 sectionList.add(Section(HEADER, headerStrIt, null))
             }
             sectionList.add(Section(NOT_HEADER, null, ind))

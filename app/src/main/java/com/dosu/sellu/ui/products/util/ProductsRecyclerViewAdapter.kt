@@ -18,11 +18,10 @@ import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.dosu.sellu.R
 import com.dosu.sellu.data.network.product.model.Product
-import com.dosu.sellu.ui.products.ProductDetails
 import com.dosu.sellu.ui.products.add_product.AddProductActivity
 import com.dosu.sellu.ui.products.viewmodel.ProductsViewModel
 import com.dosu.sellu.util.dp
-import com.dosu.sellu.util.prize
+import com.dosu.sellu.util.price
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.CornerFamily
 
@@ -30,7 +29,6 @@ class ProductsRecyclerViewAdapter(private val context: Context?, private val vie
     : RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder>(){
     private val mInflater = LayoutInflater.from(context)
     var products: List<Product> = emptyList()
-    lateinit var fragment: ProductDetails
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = mInflater.inflate(R.layout.fragment_product_item, parent, false)
@@ -38,7 +36,6 @@ class ProductsRecyclerViewAdapter(private val context: Context?, private val vie
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //fragment = ProductDetails() remove me
         val product = products[position]
 
         val radius = 5.0.dp
@@ -47,10 +44,10 @@ class ProductsRecyclerViewAdapter(private val context: Context?, private val vie
 
         holder.name.text = product.name
         if(product.numOfImages > 0) viewModel.downloadImage(product.productId, 0)
-        holder.prize.text = product.prize.prize
+        holder.prize.text = product.prize.price
         val quantityStr = "${context?.getString(R.string.text_quantity)} ${product.quantity}"
         val quantity = SpannableString(quantityStr)
-        quantity.setSpan(RelativeSizeSpan(2f), 5, quantityStr.length, 0)
+        quantity.setSpan(RelativeSizeSpan(1.618f), 5, quantityStr.length, 0)
         holder.quantity.text = quantity
         holder.addBtn.setOnClickListener { showDialog(product) }
         setExpandAction(position, holder)

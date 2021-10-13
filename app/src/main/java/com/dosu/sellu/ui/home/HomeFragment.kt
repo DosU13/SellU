@@ -1,19 +1,27 @@
 package com.dosu.sellu.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.dosu.sellu.R
 import com.dosu.sellu.databinding.HomeFragmentBinding
-import com.dosu.sellu.ui.home.SimpleSectionedRecyclerViewAdapter.Section
+import com.dosu.sellu.ui.home.model.Stat
+import com.dosu.sellu.ui.home.util.HomeListener
+import com.dosu.sellu.ui.home.viewmodel.HomeViewModel
+import com.dosu.sellu.ui.home.viewmodel.HomeViewModelFactory
+import com.dosu.sellu.util.ErrorResponse
+import com.dosu.sellu.util.price
+import org.kodein.di.DI
+import org.kodein.di.DIAware
+import org.kodein.di.android.x.closestDI
+import org.kodein.di.instance
 
-class HomeFragment : Fragment() {
-
+class HomeFragment : Fragment(), HomeListener, DIAware {
+    override val di: DI by closestDI()
+    private val homeViewModelFactory: HomeViewModelFactory by instance()
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: HomeFragmentBinding? = null
     private val binding get() = _binding!!
@@ -23,44 +31,33 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
         _binding = HomeFragmentBinding.inflate(inflater, container, false)
-
-        val sCheeseStrings = mutableListOf("1", "2", "3", "4", "5", "1", "2", "3", "4", "5", "1", "2", "3", "4", "5", "1", "2", "3", "4", "5")
-
-        //Your RecyclerView
-        val mRecyclerView = binding.recyclerView
-        mRecyclerView.setHasFixedSize(true)
-        mRecyclerView.layoutManager = LinearLayoutManager(context)
-        mRecyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
-
-        //Your RecyclerView.Adapter
-        val mAdapter = SimpleAdapter(requireContext(), sCheeseStrings)
-
-        //This is the code to provide a sectioned list
-        val sections: MutableList<Section> =
-            ArrayList()
-
-        //Sections
-        sections.add(Section(0, "Section 1"))
-        sections.add(Section(5, "Section 2"))
-        sections.add(Section(12, "Section 3"))
-        sections.add(Section(14, "Section 4"))
-        sections.add(Section(20, "Section 5"))
-
-        //Add your adapter to the sectionAdapter
-        val mSectionedAdapter =
-            SimpleSectionedRecyclerViewAdapter(requireContext(), R.layout.section, R.id.section_text, mAdapter)
-        mSectionedAdapter.setSections(sections.toTypedArray())
-
-        //Apply this adapter to the RecyclerView
-        mRecyclerView.adapter = mSectionedAdapter
-
+        homeViewModel.setListener(this)
+        homeViewModel.loadData()
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun dataReady() {
+        homeViewModel.statistics()
+        homeViewModel.singleStat()
+    }
+
+    override fun singleStat(singleStat: Stat) {
+        binding.sells.text = singleStat.money.toString()
+        binding.income.text = (singleStat.money - singleStat.outcome).toString()
+    }
+
+    override fun statsReady(stats: MutableList<Stat>) {
+        binding.canvas.setValues(stats)
+    }
+
+    override fun anyError(code: Int?, responseBody: ErrorResponse?) {
+        Log.e("HomeFragment", responseBody?.detail?:"no details")
     }
 }

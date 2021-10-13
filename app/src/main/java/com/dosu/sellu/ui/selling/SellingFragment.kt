@@ -2,14 +2,18 @@ package com.dosu.sellu.ui.selling
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.AutoTransition
+import androidx.transition.TransitionManager
 import com.dosu.sellu.R
 import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.databinding.SellingFragmentBinding
@@ -32,8 +36,8 @@ class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListene
     private var _binding: SellingFragmentBinding? = null
     private val binding get() = _binding!!
     override val di: DI by closestDI()
-    private val sellingViewModelFactory: SellingViewModelFactory by instance()
-    private lateinit var sellingViewModel: SellingViewModel
+    //private val sellingViewModelFactory: SellingViewModelFactory by instance()
+    private val sellingViewModel: SellingViewModel by instance()
     private val productsViewModelFactory: ProductsViewModelFactory by instance()
     private lateinit var productsViewModel: ProductsViewModel
 
@@ -41,8 +45,9 @@ class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListene
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = SellingFragmentBinding.inflate(inflater, container, false)
-        sellingViewModel = ViewModelProvider(this, sellingViewModelFactory).get(SellingViewModel::class.java)
+        //sellingViewModel = ViewModelProvider(this, sellingViewModelFactory).get(SellingViewModel::class.java)
         sellingViewModel.setListener(this)
+        sellingViewModel.getSummaryPrize()
         productsViewModel = ViewModelProvider(this, productsViewModelFactory).get(ProductsViewModel::class.java)
         productsViewModel.setListener(this as ProductsListener)
         productsViewModel.setListener(this as ImageListener)
@@ -52,20 +57,35 @@ class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListene
         adapter =  SellingRecyclerViewAdapter(context, productsViewModel, sellingViewModel)
         recyclerView.adapter = adapter
         productsViewModel.getProducts()
-        toggleBtnPressed(false)
-        binding.toggleBtn.setOnCheckedChangeListener{ _, checked -> toggleBtnPressed(checked)}
+        binding.toggleBtn.setOnCheckedChangeListener{ _, checked ->
+            updateToggleBtn(checked)
+        }
         binding.sellBtn.setOnClickListener{sellBtnPressed()}
         return binding.root
     }
 
-    private fun toggleBtnPressed(checked: Boolean){
-        binding.editPrize.isEnabled = checked
+    private lateinit var anim: AnimatedVectorDrawable
+
+    private fun updateToggleBtn(checked: Boolean){
+        binding.reasonContainer.visibility = if(checked)View.VISIBLE else View.GONE
+        binding.prizeContainer.setBackgroundResource(if(checked)R.drawable.tile_top else R.drawable.tile)
+        binding.prize.isEnabled = checked
+        if(checked) binding.prize.requestFocus()
+        else sellingViewModel.getSummaryPrize()
         binding.reason.isEnabled = checked
+        anim = AppCompatResources.getDrawable(requireContext(),
+            if(checked) R.drawable.animated_edit_to_cancel else R.drawable.animated_cancel_to_edit)
+                as AnimatedVectorDrawable
+        binding.toggleBtn.background = anim
+        val autoTransition = AutoTransition()
+        autoTransition.duration = 150
+        TransitionManager.beginDelayedTransition(binding.root, autoTransition)
+        anim.start()
     }
 
     private fun sellBtnPressed(){
         if(binding.toggleBtn.isChecked){
-            val prize = binding.editPrize.text.toString().toDouble()
+            val prize = binding.prize.text.toString().toDouble()
             sellingViewModel.sell(prize, prize, binding.reason.text.toString())
         }else {
             sellingViewModel.sell(summaryPrize, null, null)
@@ -99,7 +119,7 @@ class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListene
     @SuppressLint("SetTextI18n")
     override fun getSummaryPrize(prize: Double) {
         summaryPrize = prize
-        if(!binding.toggleBtn.isChecked) binding.prize.text = "${getString(R.string.total_amount)} $prize СОМ"
+        if(!binding.toggleBtn.isChecked) binding.prize.setText(prize.toString())
     }
 
     override fun downloadImage(byteArray: ByteArray, productId: String, imagePos: Int) {

@@ -6,7 +6,7 @@ import com.dosu.sellu.util.date
 import com.dosu.sellu.util.hmm
 import java.util.*
 
-data class HistorySelling(
+data class HistorySellin(
     val sellingId: String,
     val products: Map<Product?, Int>,
     val dayComparator: Long,
@@ -19,7 +19,7 @@ data class HistorySelling(
 ){
     companion object {
         @Suppress("UNCHECKED_CAST")
-        fun Selling.toHistorySelling(allProducts: List<Product>): HistorySelling {
+        fun Selling.toHistorySelling(allProducts: List<Product>): HistorySellin {
             val hProducts = mutableMapOf<Product?, Int>()
             products.forEach { (id, quantity) ->
                 val product = allProducts.find{p -> p.productId==id}
@@ -29,7 +29,7 @@ data class HistorySelling(
             cal.time = time.toDate()
             val dayComparator: Long = 512L*(cal.get(Calendar.YEAR)-1970) + cal.get(Calendar.DAY_OF_YEAR)
             val timeInMillis = cal.timeInMillis
-            return HistorySelling(sellingId, hProducts, dayComparator, timeInMillis, time.date, time.hmm, prize, newPrize, newPrizeReason)
+            return HistorySellin(sellingId, hProducts, dayComparator, timeInMillis, time.date, time.hmm, prize, newPrize, newPrizeReason)
         }
     }
 }

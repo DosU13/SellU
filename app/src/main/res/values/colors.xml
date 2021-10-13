@@ -6,6 +6,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="light_gray">#FFBBBBBB</color>
 
+    <color name="money">#FF77FF00</color>
+    <color name="income">#FFFFFF00</color>
+
     <color name="tile">@color/white</color>
     <color name="background">@color/light_gray</color>
     <color name="text">@color/black</color>

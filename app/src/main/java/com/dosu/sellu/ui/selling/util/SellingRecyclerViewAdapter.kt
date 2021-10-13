@@ -1,8 +1,6 @@
 package com.dosu.sellu.ui.selling.util
 
 import android.content.Context
-import android.text.SpannableString
-import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +12,7 @@ import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.ui.products.viewmodel.ProductsViewModel
 import com.dosu.sellu.ui.selling.viewmodel.SellingViewModel
 import com.dosu.sellu.util.dp
-import com.dosu.sellu.util.prize
+import com.dosu.sellu.util.price
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.CornerFamily
 
@@ -38,7 +36,7 @@ class SellingRecyclerViewAdapter(
             setTopLeftCorner(CornerFamily.ROUNDED, radius).setBottomLeftCorner(CornerFamily.ROUNDED, radius).build()
         productsViewModel.downloadImage(p.productId, 0)
         holder.productName.text = p.name
-        holder.prize.text = p.prize.prize
+        holder.prize.text = p.prize.price
         holder.quantityMinus.setOnClickListener {
             sellingViewModel.decreaseQuantity(p.productId)
             holder.quantity.text = sellingViewModel.getSellingQuantity(p.productId).toString()

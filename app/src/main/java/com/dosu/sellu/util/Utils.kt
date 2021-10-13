@@ -11,6 +11,7 @@ import android.text.format.DateUtils
 import android.text.style.RelativeSizeSpan
 import com.dosu.sellu.R
 import com.google.firebase.Timestamp
+import java.sql.Time
 import java.util.*
 
 fun ByteArray.toDrawable(resources: Resources): Drawable {
@@ -23,10 +24,10 @@ fun Uri.toByteArray(context: Context): ByteArray{
 
 val Double.dp: Float get() = (this * Resources.getSystem().displayMetrics.density).toFloat()
 
-val Double.prize: SpannableString get() {
+val Double.price: SpannableString get() {
     val span = if(this == this.toInt().toDouble()) SpannableString("${this.toInt()} сом")
         else SpannableString("$this сом")
-    span.setSpan(RelativeSizeSpan(2f), 0,this.toInt().toString().length, 0)
+    span.setSpan(RelativeSizeSpan(1.618f), 0,this.toInt().toString().length, 0)
     return span
 }
 
@@ -37,6 +38,21 @@ val Timestamp.hmm : String get() {
     val m = cal.get(Calendar.MINUTE)
     return if(m<10) "$h:0$m"
     else "$h:$m"
+}
+
+val Timestamp.mmddyy : String get() {
+    val cal = Calendar.getInstance()
+    cal.time = this.toDate()
+    return when {
+        DateUtils.isToday(cal.timeInMillis) -> SellU.res.getString(R.string.today)
+        isYesterday(cal.timeInMillis) -> SellU.res.getString(R.string.yesterday)
+        else -> {
+            val m = cal.get(Calendar.MONTH)+1
+            val d = cal.get(Calendar.DAY_OF_MONTH)
+            val y = cal.get(Calendar.YEAR)
+            String.format("%02d/%02d/%02d", m, d, y%100)
+        }
+    }
 }
 
 val Timestamp.date : String get() {

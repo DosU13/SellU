@@ -8,8 +8,6 @@ import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.data.network.selling.SellingRepository
 import com.dosu.sellu.data.network.selling.model.Selling
 import com.dosu.sellu.ui.history.util.HistoryListener
-import com.dosu.sellu.ui.history.model.HistorySelling
-import com.dosu.sellu.ui.history.model.HistorySelling.Companion.toHistorySelling
 import kotlinx.coroutines.launch
 
 class HistoryViewModel(private val sellingRepository: SellingRepository, private val productRepository: ProductRepository)
@@ -32,10 +30,7 @@ class HistoryViewModel(private val sellingRepository: SellingRepository, private
             is NetworkResponse.Failure -> listener.anyError(response.errorCode, response.errorBody)
         }
         if(products!=null && sellingList!=null) {
-            val hSellingList: List<HistorySelling> = List(sellingList.size) {
-                sellingList[it].toHistorySelling(products)
-            }
-            listener.getSellingList(hSellingList)
+            listener.getSellingList(products, sellingList)
         }
     }
 }
