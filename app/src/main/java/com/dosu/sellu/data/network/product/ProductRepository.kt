@@ -6,6 +6,7 @@ import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.data.network.product.model.ProductWithoutId
 import com.dosu.sellu.util.BaseRepository
 import com.google.firebase.auth.FirebaseAuth
+import java.util.*
 
 class ProductRepository(private val firebaseService: FirebaseService): BaseRepository() {
     private val userId get() = FirebaseAuth.getInstance().currentUser!!.uid
@@ -27,8 +28,15 @@ class ProductRepository(private val firebaseService: FirebaseService): BaseRepos
         firebaseService.updateProductDetails(productId, name, numOfImages, description, prize, ownPrize, quantity)
     }
 
-    suspend fun updateProductQuantity(productId: String, addedQuantity: Int) = safeApiCall {
-        firebaseService.updateProductQuantity(productId, addedQuantity)
+    suspend fun updateProductTodaySold(productId: String, todayDate: Date, todaySold: Int) = safeApiCall {
+        firebaseService.updateProductTodaySold(productId, todayDate, todaySold.toLong())
+    }
+    suspend fun incrementProductTodaySold(productId: String, increment:Int) = safeApiCall {
+        firebaseService.incrementProductTodaySold(productId, increment.toLong())
+    }
+
+    suspend fun incrementProductQuantity(productId: String, addedQuantity: Int) = safeApiCall {
+        firebaseService.updateProductQuantity(productId, addedQuantity.toLong())
     }
 
     suspend fun downloadImage(productId: String, photoIndex: Int) = safeApiCall {

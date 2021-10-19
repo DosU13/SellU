@@ -13,6 +13,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
+import java.util.*
 
 class FirebaseService {
     private val db = FirebaseFirestore.getInstance()
@@ -46,8 +47,16 @@ class FirebaseService {
             "prize", prize, "ownPrize", ownPrize, "quantity", quantity).await()
     }
 
-    suspend fun updateProductQuantity(productId: String, addedQuantity: Int) {
-        db.collection(productsRef).document(productId).update("quantity", FieldValue.increment(addedQuantity.toLong())).await()
+    suspend fun updateProductTodaySold(productId: String, todayDate: Date, todaySold: Long){
+        db.collection(productsRef).document(productId).update(
+            "todayDate", todayDate, "todaySold", todaySold).await()
+    }
+    suspend fun incrementProductTodaySold(productId: String, increment: Long){
+        db.collection(productsRef).document(productId).update("todaySold", FieldValue.increment(increment)).await()
+    }
+
+    suspend fun updateProductQuantity(productId: String, addedQuantity: Long) {
+        db.collection(productsRef).document(productId).update("quantity", FieldValue.increment(addedQuantity)).await()
     }
 
     suspend fun getSellingList(): List<Selling>{

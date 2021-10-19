@@ -6,6 +6,10 @@ import android.util.Log
 import com.dosu.sellu.data.network.NetworkResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.Objects.toString
+
 //import retrofit2.HttpException
 //import java.net.ConnectException
 //import java.net.SocketTimeoutException
@@ -18,31 +22,32 @@ abstract class BaseRepository {
             try {
                 NetworkResponse.Success(apiCall.invoke())
             }catch (e: Exception){
-                Log.e(Companion.TAG, "safeApiCall: NetworkResponse Failure", e)
+                e.printStackTrace()
+                Log.e(Companion.TAG, "safeApiCall: NetworkResponse Failure${this.javaClass.name}", e)
                 NetworkResponse.Failure(false, null, null)
-            }
-//            } catch (throwable: Throwable) {
-//                when (throwable) {
+            }catch (throwable: Throwable) {
+                throwable.printStackTrace()
+                when (throwable) {
 //                    is HttpException -> {
 //                        NetworkResponse.Failure(
 //                            false, throwable.code(), convertErrorBody(throwable)
 //                        )
 //                    }
-//                    is SocketTimeoutException -> {
-//                        NetworkResponse.Failure(
-//                            false, 1, null
-//                        )
-//                    }
-//                    is ConnectException -> {
-//                        NetworkResponse.Failure(
-//                            false, 2, null
-//                        )
-//                    }
-//                    else -> {
-//                        NetworkResponse.Failure(true, null, null)
-//                    }
-//                }
-//            }
+                    is SocketTimeoutException -> {
+                        NetworkResponse.Failure(
+                            false, 1, null
+                        )
+                    }
+                    is ConnectException -> {
+                        NetworkResponse.Failure(
+                            false, 2, null
+                        )
+                    }
+                    else -> {
+                        NetworkResponse.Failure(true, null, null)
+                    }
+                }
+            }
         }
     }
 

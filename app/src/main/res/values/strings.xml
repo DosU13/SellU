@@ -48,6 +48,8 @@
     <string name="today">Сегодня</string>
     <string name="yesterday">Вчера</string>
     <string name="reason">Причины(Пр:скидка)</string>
+    <string name="today_sold">Сегодня проданно:</string>
+    <string name="today_income">Сегодняшний прибыль</string>
     <string-array name="month">
         <item>Январь</item>
         <item>Февраль</item>

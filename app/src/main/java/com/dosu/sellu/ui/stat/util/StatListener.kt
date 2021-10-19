@@ -1,9 +1,9 @@
-package com.dosu.sellu.ui.home.util
+package com.dosu.sellu.ui.stat.util
 
-import com.dosu.sellu.ui.home.model.Stat
+import com.dosu.sellu.ui.stat.model.Stat
 import com.dosu.sellu.util.ErrorResponse
 
-interface HomeListener{
+interface StatListener{
     fun dataReady()
     fun singleStat(singleStat: Stat)
     fun statsReady(stats: MutableList<Stat>)

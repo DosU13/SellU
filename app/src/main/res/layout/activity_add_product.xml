@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_weight="2"
-            android:background="@drawable/ic_baseline_shopping_bag_24"/>
+            android:src="@drawable/ic_baseline_shopping_bag_24"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -35,13 +35,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/ic_baseline_shopping_bag_24"/>
+                android:src="@drawable/ic_baseline_shopping_bag_24"/>
             <ImageView
                 android:id="@+id/image3"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/ic_baseline_shopping_bag_24"/>
+                android:src="@drawable/ic_baseline_shopping_bag_24"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
@@ -53,13 +53,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/ic_baseline_shopping_bag_24"/>
+                android:src="@drawable/ic_baseline_shopping_bag_24"/>
             <ImageView
                 android:id="@+id/image4"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/ic_baseline_shopping_bag_24"/>
+                android:src="@drawable/ic_baseline_shopping_bag_24"/>
         </LinearLayout>
     </LinearLayout>
 

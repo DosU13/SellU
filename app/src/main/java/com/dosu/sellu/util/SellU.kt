@@ -8,11 +8,10 @@ import com.dosu.sellu.data.network.product.ProductRepository
 import com.dosu.sellu.data.network.selling.SellingRepository
 import com.dosu.sellu.data.network.user.UserRepository
 import com.dosu.sellu.ui.history.viewmodel.HistoryViewModelFactory
-import com.dosu.sellu.ui.home.viewmodel.HomeViewModelFactory
+import com.dosu.sellu.ui.stat.viewmodel.StatViewModelFactory
 import com.dosu.sellu.ui.products.viewmodel.ProductsViewModelFactory
 import com.dosu.sellu.ui.selling.viewmodel.SellingViewModel
 import com.dosu.sellu.ui.selling.viewmodel.SellingViewModelFactory
-import com.dosu.sellu.ui.user_profile.viewmodel.UserViewModel
 import com.dosu.sellu.ui.user_profile.viewmodel.UserViewModelFactory
 import org.kodein.di.*
 import org.kodein.di.android.x.androidXModule
@@ -28,14 +27,14 @@ class SellU : Application(), DIAware {
         bind { provider { ProductsViewModelFactory(instance()) }}
 
         bind<SellingRepository>() with singleton { SellingRepository(instance()) }
-        bind { singleton  { SellingViewModelFactory(instance(), instance()) }}
-        bind { singleton {SellingViewModel(instance(), instance())}}
+        bind { singleton { SellingViewModelFactory(instance(), instance()) }}
+        bind { singleton { SellingViewModel(instance(), instance())}}
         bind { provider { HistoryViewModelFactory(instance(), instance()) }}
 
         bind<UserRepository>() with singleton { UserRepository(instance())}
         bind { provider { UserViewModelFactory(instance()) }}
 
-        bind { provider { HomeViewModelFactory(instance(), instance())}}
+        bind { provider { StatViewModelFactory(instance(), instance())}}
     }
 
     override fun onCreate() {

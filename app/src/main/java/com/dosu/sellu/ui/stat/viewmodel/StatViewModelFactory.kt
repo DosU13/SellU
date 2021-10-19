@@ -1,14 +1,14 @@
-package com.dosu.sellu.ui.home.viewmodel
+package com.dosu.sellu.ui.stat.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dosu.sellu.data.network.product.ProductRepository
 import com.dosu.sellu.data.network.selling.SellingRepository
 
-class HomeViewModelFactory(private val productRepository: ProductRepository,
+class StatViewModelFactory(private val productRepository: ProductRepository,
                            private val sellingRepository: SellingRepository): ViewModelProvider.NewInstanceFactory(){
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return HomeViewModel(productRepository,  sellingRepository) as T
+        return StatViewModel(productRepository,  sellingRepository) as T
     }
 }

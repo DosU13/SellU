@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.dosu.sellu.R
 import com.dosu.sellu.databinding.UserProfileFragmentBinding
+import com.dosu.sellu.ui.products.util.OnSwipeTouchListener
 import com.dosu.sellu.ui.user_profile.util.UserListener
 import com.dosu.sellu.ui.user_profile.viewmodel.UserViewModel
 import com.dosu.sellu.ui.user_profile.viewmodel.UserViewModelFactory
@@ -41,6 +42,16 @@ class UserProfileFragment : Fragment(), DIAware, UserListener {
 
         if (user.isAnonymous) setUpWithGuest()
         else setUpWithUser()
+
+        binding.username.setOnTouchListener(object : OnSwipeTouchListener(requireContext()){
+            override fun onSwipeRight() {
+                Toast.makeText(context, "right", Toast.LENGTH_LONG).show()
+            }
+
+            override fun onSwipeLeft() {
+                Toast.makeText(context, "left", Toast.LENGTH_LONG).show()
+            }
+        })
 
         return binding.root
     }

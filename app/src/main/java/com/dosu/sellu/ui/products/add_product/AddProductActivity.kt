@@ -51,7 +51,7 @@ class AddProductActivity : AppCompatActivity(), DIAware, AddProductListener, Ima
     }
 
     private fun updateUIWithProduct(){
-        productsViewModel.downloadImages(product.productId, product.numOfImages.toInt())
+        productsViewModel.downloadImages(product, 0)
         binding.run{
             editName.setText(product.name)
             editDescription.setText(product.description)
@@ -62,7 +62,9 @@ class AddProductActivity : AppCompatActivity(), DIAware, AddProductListener, Ima
     }
 
     private fun updateImages(){
-        try {for(i in 0..4) imageView(i).setImageDrawable(images[i].toDrawable(resources))}
+        try {for(i in 0..4) {
+            imageView(i).setImageDrawable(images[i].toDrawable(resources))
+        }}
         catch (ignored: IndexOutOfBoundsException){}
     }
 
@@ -72,7 +74,7 @@ class AddProductActivity : AppCompatActivity(), DIAware, AddProductListener, Ima
         resultLauncher.launch(intent)
     }
 
-    private val images = mutableListOf<ByteArray>()
+    private var images = mutableListOf<ByteArray>()
     private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){result->
         if(result.resultCode == Activity.RESULT_OK){
             val data: Intent? = result.data
@@ -102,8 +104,10 @@ class AddProductActivity : AppCompatActivity(), DIAware, AddProductListener, Ima
         updateUIWithProduct()
     }
 
-    override fun downloadImage(byteArray: ByteArray, productId: String, imagePos: Int){
-        images.add(byteArray)
+    override fun downloadImage(byteArray: ByteArray, productId: String, imagePos: Int){}
+
+    override fun downloadImages(byteArrays: Array<ByteArray>, productPos: Int) {
+        images = byteArrays.toMutableList()
         updateImages()
     }
 

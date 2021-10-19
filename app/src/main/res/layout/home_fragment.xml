@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/tile">
-        <com.dosu.sellu.ui.util.StatCanvas
+        <com.dosu.sellu.ui.stat.StatCanvas
             android:id="@+id/canvas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

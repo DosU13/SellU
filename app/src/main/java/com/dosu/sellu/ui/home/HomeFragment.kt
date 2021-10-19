@@ -8,21 +8,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.dosu.sellu.databinding.HomeFragmentBinding
-import com.dosu.sellu.ui.home.model.Stat
-import com.dosu.sellu.ui.home.util.HomeListener
-import com.dosu.sellu.ui.home.viewmodel.HomeViewModel
-import com.dosu.sellu.ui.home.viewmodel.HomeViewModelFactory
+import com.dosu.sellu.ui.stat.model.Stat
+import com.dosu.sellu.ui.stat.util.StatListener
+import com.dosu.sellu.ui.stat.viewmodel.StatViewModel
+import com.dosu.sellu.ui.stat.viewmodel.StatViewModelFactory
 import com.dosu.sellu.util.ErrorResponse
-import com.dosu.sellu.util.price
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.android.x.closestDI
 import org.kodein.di.instance
 
-class HomeFragment : Fragment(), HomeListener, DIAware {
+class HomeFragment : Fragment(), StatListener, DIAware {
     override val di: DI by closestDI()
-    private val homeViewModelFactory: HomeViewModelFactory by instance()
-    private lateinit var homeViewModel: HomeViewModel
+    private val statViewModelFactory: StatViewModelFactory by instance()
+    private lateinit var statViewModel: StatViewModel
     private var _binding: HomeFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -31,10 +30,10 @@ class HomeFragment : Fragment(), HomeListener, DIAware {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
+        statViewModel = ViewModelProvider(this, statViewModelFactory).get(StatViewModel::class.java)
         _binding = HomeFragmentBinding.inflate(inflater, container, false)
-        homeViewModel.setListener(this)
-        homeViewModel.loadData()
+        statViewModel.setListener(this)
+        statViewModel.loadData()
         return binding.root
     }
 
@@ -44,8 +43,7 @@ class HomeFragment : Fragment(), HomeListener, DIAware {
     }
 
     override fun dataReady() {
-        homeViewModel.statistics()
-        homeViewModel.singleStat()
+        statViewModel.statistics()
     }
 
     override fun singleStat(singleStat: Stat) {
@@ -54,7 +52,7 @@ class HomeFragment : Fragment(), HomeListener, DIAware {
     }
 
     override fun statsReady(stats: MutableList<Stat>) {
-        binding.canvas.setValues(stats)
+        binding.canvas.drawMoney(stats)
     }
 
     override fun anyError(code: Int?, responseBody: ErrorResponse?) {

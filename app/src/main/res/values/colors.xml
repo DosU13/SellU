@@ -8,9 +8,10 @@
 
     <color name="money">#FF77FF00</color>
     <color name="income">#FFFFFF00</color>
+    <color name="count">#FFFF6633</color>
 
     <color name="tile">@color/white</color>
-    <color name="background">@color/light_gray</color>
+    <color name="background">@color/white</color>
     <color name="text">@color/black</color>
     <color name="text_background">#88FFFFFF</color>
 </resources>

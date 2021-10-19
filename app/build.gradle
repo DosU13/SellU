@@ -7,13 +7,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.dosu.sellu"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
@@ -39,18 +39,16 @@ android {
 }
 
 dependencies {
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.+'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     //Firebase
@@ -59,11 +57,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-storage-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1'
-    implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.2-native-mt'
+    implementation 'com.firebaseui:firebase-ui-auth:8.0.0'
     //implementation 'com.google.firebase:firebase-crashlytics:18.2.1'
 
     // Kodein
-    implementation 'org.kodein.di:kodein-di:7.6.0'
-    implementation 'org.kodein.di:kodein-di-framework-android-x:7.6.0'
+    implementation 'org.kodein.di:kodein-di:7.8.0'
+    implementation 'org.kodein.di:kodein-di-framework-android-x:7.8.0'
+
+    //carousel
+    //implementation 'com.synnapps:carouselview:0.1.4'
 }

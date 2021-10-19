@@ -128,6 +128,10 @@ class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListene
         viewHolder.image.setImageDrawable(byteArray.toDrawable(resources))
     }
 
+    override fun downloadImages(byteArrays: Array<ByteArray>, productPos: Int) {
+
+    }
+
     override fun anyError(code: Int?, responseBody: ErrorResponse?) {
         Toast.makeText(context, "Error adding selling or getting products", Toast.LENGTH_LONG).show()
     }

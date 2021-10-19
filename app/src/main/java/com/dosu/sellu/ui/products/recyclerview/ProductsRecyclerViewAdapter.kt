@@ -1,4 +1,4 @@
-package com.dosu.sellu.ui.products.util
+package com.dosu.sellu.ui.products.recyclerview
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -7,8 +7,8 @@ import android.content.Intent
 import android.text.InputType
 import android.text.SpannableString
 import android.text.style.RelativeSizeSpan
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
@@ -19,31 +19,32 @@ import androidx.transition.TransitionManager
 import com.dosu.sellu.R
 import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.ui.products.add_product.AddProductActivity
+import com.dosu.sellu.ui.products.util.ImageListener
 import com.dosu.sellu.ui.products.viewmodel.ProductsViewModel
+import com.dosu.sellu.util.ErrorResponse
 import com.dosu.sellu.util.dp
 import com.dosu.sellu.util.price
-import com.google.android.material.imageview.ShapeableImageView
+import com.dosu.sellu.util.toDrawable
 import com.google.android.material.shape.CornerFamily
 
-class ProductsRecyclerViewAdapter(private val context: Context?, private val viewModel: ProductsViewModel)
-    : RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder>(){
+class ProductsRecyclerViewAdapter(private val context: Context?,
+                                  private val productsViewModel: ProductsViewModel)
+    : RecyclerView.Adapter<ProductItemViewHolder>(), ImageListener {
     private val mInflater = LayoutInflater.from(context)
     var products: List<Product> = emptyList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductItemViewHolder {
         val view = mInflater.inflate(R.layout.fragment_product_item, parent, false)
-        return ViewHolder(view)
+        return ProductItemViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ProductItemViewHolder, position: Int) {
         val product = products[position]
-
         val radius = 5.0.dp
         holder.image.shapeAppearanceModel = holder.image.shapeAppearanceModel.toBuilder().
             setTopLeftCorner(CornerFamily.ROUNDED, radius).setBottomLeftCorner(CornerFamily.ROUNDED, radius).build()
-
         holder.name.text = product.name
-        if(product.numOfImages > 0) viewModel.downloadImage(product.productId, 0)
+        if(product.numOfImages > 0) productsViewModel.downloadImage(product.productId, 0)
         holder.prize.text = product.prize.price
         val quantityStr = "${context?.getString(R.string.text_quantity)} ${product.quantity}"
         val quantity = SpannableString(quantityStr)
@@ -54,38 +55,41 @@ class ProductsRecyclerViewAdapter(private val context: Context?, private val vie
     }
 
     private var expandedPos = -1
+    private var expandedHolder: ProductItemViewHolder? = null
     @SuppressLint("NotifyDataSetChanged")
-    private fun setExpandAction(pos: Int, holder: ViewHolder){
+    private fun setExpandAction(pos: Int, holder: ProductItemViewHolder){
         val isExpanded = expandedPos == pos
         holder.details.visibility = if(isExpanded) VISIBLE else GONE
         holder.details.isActivated = isExpanded
         holder.expBtn.setOnClickListener {
-            //notifyItemChanged(expandedPos)
             expandedPos = if(isExpanded) -1 else pos
+            expandedHolder = if(isExpanded) null else holder
             if(!isExpanded) updateDetails(pos, holder)
             val autoTransition = AutoTransition()
             autoTransition.duration = 150
             TransitionManager.beginDelayedTransition(recyclerView, autoTransition)
-            //notifyItemChanged(pos)
             notifyDataSetChanged()
         }
     }
 
-    private fun updateDetails(pos: Int, holder: ViewHolder) {
+    private fun updateDetails(pos: Int, holder: ProductItemViewHolder) {
         holder.run {
             val p = products[pos]
-            viewModel.downloadImage(products[pos].productId, 0)
+            productsViewModel.downloadImages(p, pos)
             description.text = p.description
-            ownPrize.text = p.ownPrize.toString()
-            val todaySoldInt = viewModel.todaySold(p.productId)
-            todaySold.text = todaySoldInt.toString()
-            todayIncome.text = String.format("%.2f", (todaySoldInt.toDouble()*(p.prize-p.ownPrize)))+"сом"
+            ownPrize.text = p.ownPrize.price
+            val todaySoldInt = productsViewModel.todaySold(p)
+            val todaySoldStr = SpannableString(todaySoldInt.toString())
+            todaySoldStr.setSpan(RelativeSizeSpan(1.618f), 0, todaySoldStr.length, 0)
+            todaySold.text = todaySoldStr
+            todayIncome.text = ((p.prize - p.ownPrize)*todaySoldInt).price
             changeBtn.setOnClickListener {
                 val intent = Intent(context, AddProductActivity::class.java)
                 intent.putExtra("isNewProduct", false)
                 intent.putExtra("productId", p.productId)
                 context?.startActivity(intent)
             }
+            setImageListeners(context!!, recyclerView, p.numOfImages.toInt())
         }
     }
 
@@ -102,33 +106,36 @@ class ProductsRecyclerViewAdapter(private val context: Context?, private val vie
         builder.setView(input)
         builder.setPositiveButton(R.string.add_quantity_ok) {_, _ ->
             val v = input.text.toString().toInt()
-            viewModel.updateProductQuantity(product.productId, v)
+            productsViewModel.updateProductQuantity(product.productId, v)
         }
         builder.setNegativeButton(R.string.add_quantity_cancel) { dialog, _ -> dialog.cancel() }
         builder.show()
-    }
-
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val name: TextView = itemView.findViewById(R.id.product_name)
-        val image: ShapeableImageView = itemView.findViewById(R.id.product_image)
-        val quantity: TextView = itemView.findViewById(R.id.quantity)
-        val prize: TextView = itemView.findViewById(R.id.prize)
-        val addBtn: Button = itemView.findViewById(R.id.add_btn)
-        val expBtn: Button = itemView.findViewById(R.id.product_expand_btn)
-        val details: LinearLayout = itemView.findViewById(R.id.details)
-
-        val images: ImageView = itemView.findViewById(R.id.images)
-        val description: TextView = itemView.findViewById(R.id.description)
-        val ownPrize: TextView = itemView.findViewById(R.id.own_prize)
-        val todaySold: TextView = itemView.findViewById(R.id.today_sold)
-        val todayIncome: TextView = itemView.findViewById(R.id.today_income)
-        val graph: View = itemView.findViewById(R.id.graph)
-        val changeBtn: Button = itemView.findViewById(R.id.change_btn)
     }
 
     private lateinit var recyclerView: RecyclerView
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         this.recyclerView = recyclerView
+    }
+
+    override fun downloadImages(byteArrays: Array<ByteArray>, productPos: Int) {
+        if(expandedPos == productPos) {
+            expandedHolder?.let { holder ->
+                for ((index, byteArr) in byteArrays.withIndex())
+                    holder.images[index].setImageDrawable(byteArr.toDrawable(context!!.resources))
+            }
+        }
+    }
+
+    override fun downloadImage(byteArray: ByteArray, productId: String, imagePos: Int) {
+        if(imagePos==0) {
+            val pos = products.indexOf(products.find { it.productId == productId })
+            (recyclerView.findViewHolderForAdapterPosition(pos) as ProductItemViewHolder)
+                .image.setImageDrawable(byteArray.toDrawable(context!!.resources))
+        }
+    }
+
+    override fun anyError(code: Int?, responseBody: ErrorResponse?) {
+        Log.e("ProductsRecyclerAdapter", responseBody?.detail?:"no detail",null)
     }
 }

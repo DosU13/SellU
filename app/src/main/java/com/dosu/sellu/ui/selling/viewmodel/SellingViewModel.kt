@@ -1,5 +1,6 @@
 package com.dosu.sellu.ui.selling.viewmodel
 
+import android.text.format.DateUtils
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dosu.sellu.data.network.NetworkResponse
@@ -11,6 +12,7 @@ import com.dosu.sellu.ui.selling.util.AddSellingListener
 import com.dosu.sellu.util.ErrorResponse
 import com.google.firebase.Timestamp
 import kotlinx.coroutines.launch
+import java.util.*
 
 class SellingViewModel(private val sellingRepository: SellingRepository, private val productRepository: ProductRepository) : ViewModel(){
     private lateinit var addListener: AddSellingListener
@@ -66,8 +68,20 @@ class SellingViewModel(private val sellingRepository: SellingRepository, private
         }
     }
 
-    private fun updateProductQuantity(productId: String, addedQuantity: Int) = viewModelScope.launch{
-        when(val response = productRepository.updateProductQuantity(productId, addedQuantity)){
+    private fun updateProductQuantity(productId: String, quantityDecrement: Int) = viewModelScope.launch{
+        var product: Product? = null
+        when(val response = productRepository.getProduct(productId)){
+            is NetworkResponse.Success -> product = response.value
+            is NetworkResponse.Failure -> addListener.anyError(response.errorCode, response.errorBody)
+        }
+        product?.let {
+            val response = if (DateUtils.isToday(it.todayDate.time))
+                                productRepository.incrementProductTodaySold(productId, quantityDecrement)
+                else productRepository.updateProductTodaySold(productId, Calendar.getInstance().time, quantityDecrement)
+            if (response is NetworkResponse.Failure)
+                addListener.anyError(response.errorCode, response.errorBody)
+        }
+        when(val response = productRepository.incrementProductQuantity(productId, -quantityDecrement)){
             is NetworkResponse.Failure -> addListener.anyError(response.errorCode, response.errorBody)
         }
     }
@@ -76,7 +90,7 @@ class SellingViewModel(private val sellingRepository: SellingRepository, private
         when(val response = sellingRepository.addSelling(selling)){
             is NetworkResponse.Success -> {
                 addListener.addSellingSucceed()
-                for(q in sellingQuantities) updateProductQuantity(q.key, -q.value)
+                for(q in sellingQuantities) updateProductQuantity(q.key, q.value)
                 sellingQuantities = mutableMapOf()
             }
             is NetworkResponse.Failure -> addListener.anyError(response.errorCode, response.errorBody)
