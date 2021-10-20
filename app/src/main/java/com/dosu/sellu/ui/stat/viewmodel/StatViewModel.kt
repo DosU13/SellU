@@ -26,7 +26,7 @@ class StatViewModel(private val productRepository: ProductRepository,
     private var _sellingList: List<Selling>? = null
     private val sellingList get() = _sellingList!!
 
-    fun loadData() = viewModelScope.launch(Dispatchers.IO) {
+    fun loadData() = viewModelScope.launch {
         when(val response = productRepository.getProducts()){
             is NetworkResponse.Success -> _products = response.value
             is NetworkResponse.Failure -> listener.anyError(response.errorCode, response.errorBody)
@@ -39,7 +39,7 @@ class StatViewModel(private val productRepository: ProductRepository,
     }
 
     private var stats = mutableListOf<Stat>()
-    fun statistics() = viewModelScope.launch(Dispatchers.IO) {
+    fun statistics() = viewModelScope.launch() {
         stats = mutableListOf()
         var stat = Stat(sellingList[0].time.mmddyy)
         for(selling in sellingList){
@@ -59,7 +59,7 @@ class StatViewModel(private val productRepository: ProductRepository,
         singleStat()
     }
 
-    fun statistics(productPos: Int) = viewModelScope.launch(Dispatchers.IO){
+    fun statistics(productPos: Int) = viewModelScope.launch{
         stats = mutableListOf()
         var stat = Stat(sellingList[0].time.mmddyy)
         for(selling in sellingList){
@@ -81,7 +81,7 @@ class StatViewModel(private val productRepository: ProductRepository,
     }
 
     private var singleStat: Stat = Stat("all")
-    private fun singleStat() = viewModelScope.launch(Dispatchers.IO) {
+    private fun singleStat() = viewModelScope.launch() {
         for(stat in stats){
             singleStat.money += stat.money
             singleStat.outcome += stat.money

@@ -2,17 +2,27 @@ package com.dosu.sellu.util
 
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.text.SpannableString
 import android.text.format.DateUtils
 import android.text.style.RelativeSizeSpan
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 import com.dosu.sellu.R
 import com.google.firebase.Timestamp
-import java.sql.Time
+import java.io.ByteArrayOutputStream
 import java.util.*
+
+fun ImageView.loadImage(context: Context, uri: Uri?){
+    Glide.with(context).load(uri).into(this)
+}
 
 fun ByteArray.toDrawable(resources: Resources): Drawable {
     return BitmapDrawable(resources, BitmapFactory.decodeByteArray(this, 0, this.size))
@@ -20,6 +30,22 @@ fun ByteArray.toDrawable(resources: Resources): Drawable {
 
 fun Uri.toByteArray(context: Context): ByteArray{
     return context.contentResolver.openInputStream(this)!!.buffered().use { it.readBytes() }  // Me inserted non null but it may appear null, check hear
+}
+
+@Suppress("DEPRECATION")
+fun Uri.toThumbnailByteArray(context: Context): ByteArray{
+    val cSIZE = 144
+    val bitmap = if(Build.VERSION.SDK_INT < 28) MediaStore.Images.Media.getBitmap(context.contentResolver, this)
+                else ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, this))
+    val bW = bitmap.width
+    val bH = bitmap.height
+    val width: Int = if(bW<=bH) cSIZE else (bW.toDouble()/bH*cSIZE).toInt()
+    val height: Int = if(bH<=bW) cSIZE else (bH.toDouble()/bW*cSIZE).toInt()
+    val resize = Bitmap.createScaledBitmap(bitmap, width, height, true)
+    val crop = Bitmap.createBitmap(resize, (width-cSIZE)/2, (height-cSIZE)/2, cSIZE, cSIZE)
+    val stream = ByteArrayOutputStream()
+    crop.compress(Bitmap.CompressFormat.PNG, 100, stream)
+    return stream.toByteArray()
 }
 
 val Double.dp: Float get() = (this * Resources.getSystem().displayMetrics.density).toFloat()

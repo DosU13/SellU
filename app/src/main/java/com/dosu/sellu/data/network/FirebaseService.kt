@@ -1,5 +1,10 @@
 package com.dosu.sellu.data.network
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.util.Log
+import com.dosu.sellu.data.network.product.ProductRepository
 import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.data.network.product.model.Product.Companion.toProduct
 import com.dosu.sellu.data.network.product.model.ProductWithoutId
@@ -13,6 +18,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
+import java.io.ByteArrayOutputStream
 import java.util.*
 
 class FirebaseService {
@@ -76,4 +82,19 @@ class FirebaseService {
         val imgRef = storageRef.child(IMG_REF+refString)
         return imgRef.getBytes(MAX_BYTES).await()
     }
+
+    suspend fun getImageDownloadUri(refString: String): Uri? {
+        val imgRef = storageRef.child(IMG_REF+refString)
+        return imgRef.downloadUrl.await()
+    }
+
+    suspend fun update() {
+        Log.e("Update", "Start")
+        val products = db.collection(productsRef).get().await().documents.mapNotNull { it.toProduct()}
+        Log.e("Update", "Here$products")
+        for(p in products){
+            p.ownPrize
+        }
+    }
 }
+

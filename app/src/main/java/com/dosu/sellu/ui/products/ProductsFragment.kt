@@ -71,7 +71,6 @@ class ProductsFragment : Fragment(), DIAware, ProductsListener{
     @SuppressLint("NotifyDataSetChanged")
     override fun getProducts(products: List<Product>) {
         adapter.products = products
-        Toast.makeText(context, products.size.toString(), Toast.LENGTH_LONG).show()
         adapter.notifyDataSetChanged()
     }
 
@@ -80,6 +79,6 @@ class ProductsFragment : Fragment(), DIAware, ProductsListener{
     }
 
     override fun anyError(code: Int?, responseBody: ErrorResponse?) {
-        Toast.makeText(context, "any error called", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, responseBody?.detail, Toast.LENGTH_LONG).show()
     }
 }

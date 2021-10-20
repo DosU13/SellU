@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.text.InputType
 import android.text.SpannableString
 import android.text.style.RelativeSizeSpan
@@ -21,10 +22,7 @@ import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.ui.products.add_product.AddProductActivity
 import com.dosu.sellu.ui.products.util.ImageListener
 import com.dosu.sellu.ui.products.viewmodel.ProductsViewModel
-import com.dosu.sellu.util.ErrorResponse
-import com.dosu.sellu.util.dp
-import com.dosu.sellu.util.price
-import com.dosu.sellu.util.toDrawable
+import com.dosu.sellu.util.*
 import com.google.android.material.shape.CornerFamily
 
 class ProductsRecyclerViewAdapter(private val context: Context?,
@@ -44,7 +42,7 @@ class ProductsRecyclerViewAdapter(private val context: Context?,
         holder.image.shapeAppearanceModel = holder.image.shapeAppearanceModel.toBuilder().
             setTopLeftCorner(CornerFamily.ROUNDED, radius).setBottomLeftCorner(CornerFamily.ROUNDED, radius).build()
         holder.name.text = product.name
-        if(product.numOfImages > 0) productsViewModel.downloadImage(product.productId, 0)
+        if(product.numOfImages > 0) productsViewModel.imageUri(product.productId, 0)
         holder.prize.text = product.prize.price
         val quantityStr = "${context?.getString(R.string.text_quantity)} ${product.quantity}"
         val quantity = SpannableString(quantityStr)
@@ -127,12 +125,20 @@ class ProductsRecyclerViewAdapter(private val context: Context?,
         }
     }
 
-    override fun downloadImage(byteArray: ByteArray, productId: String, imagePos: Int) {
+    override fun imageUri(uri: Uri?, productId: String, imagePos: Int) {
         if(imagePos==0) {
             val pos = products.indexOf(products.find { it.productId == productId })
             (recyclerView.findViewHolderForAdapterPosition(pos) as ProductItemViewHolder)
-                .image.setImageDrawable(byteArray.toDrawable(context!!.resources))
+                .image.loadImage(context!!, uri)
         }
+    }
+
+    override fun downloadImage(byteArray: ByteArray, productId: String, imagePos: Int) {
+//        if(imagePos==0) {
+//            val pos = products.indexOf(products.find { it.productId == productId })
+//            (recyclerView.findViewHolderForAdapterPosition(pos) as ProductItemViewHolder)
+//                .image.setImageDrawable(byteArray.toDrawable(context!!.resources))
+//        }
     }
 
     override fun anyError(code: Int?, responseBody: ErrorResponse?) {

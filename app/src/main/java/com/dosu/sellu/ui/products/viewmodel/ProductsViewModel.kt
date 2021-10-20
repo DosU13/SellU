@@ -10,6 +10,7 @@ import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.ui.products.util.AddProductListener
 import com.dosu.sellu.ui.products.util.ImageListener
 import com.dosu.sellu.ui.products.util.ProductsListener
+import com.dosu.sellu.util.ErrorResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
@@ -31,14 +32,14 @@ class ProductsViewModel(private val productRepository: ProductRepository) : View
         this.imageListener = imageListener
     }
 
-    fun getProduct(productId: String) = viewModelScope.launch(Dispatchers.IO) {
+    fun getProduct(productId: String) = viewModelScope.launch {
         when(val response = productRepository.getProduct(productId)){
             is NetworkResponse.Success -> addProductListener.getProduct(response.value)
             is NetworkResponse.Failure -> addProductListener.anyError(response.errorCode, response.errorBody)
         }
     }
 
-    fun getProducts() = viewModelScope.launch(Dispatchers.IO) {
+    fun getProducts() = viewModelScope.launch {
         when (val response = productRepository.getProducts()) {
             is NetworkResponse.Success -> productsListener.getProducts(response.value)
             is NetworkResponse.Failure -> productsListener.anyError(
@@ -52,7 +53,7 @@ class ProductsViewModel(private val productRepository: ProductRepository) : View
         return if(DateUtils.isToday(product.todayDate.time)){
             product.todaySold.toInt()
         }else{
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch {
                 when(val response = productRepository
                     .updateProductTodaySold(product.productId, Calendar.getInstance().time, 0)){
                     is NetworkResponse.Failure -> productsListener.anyError(response.errorCode, response.errorBody)
@@ -62,7 +63,7 @@ class ProductsViewModel(private val productRepository: ProductRepository) : View
         }
     }
 
-    fun addProduct(product: ProductWithoutId) = viewModelScope.launch(Dispatchers.IO) {
+    fun addProduct(product: ProductWithoutId) = viewModelScope.launch() {
         when (val response = productRepository.addProduct(product)) {
             is NetworkResponse.Success -> addProductListener.addProductSucceeded(product.name, response.value)
             is NetworkResponse.Failure -> addProductListener.anyError(
@@ -73,7 +74,7 @@ class ProductsViewModel(private val productRepository: ProductRepository) : View
     }
 
     fun updateProductDetails(productId: String, name: String, numOfImages: Long, description: String,
-                             prize: Double, ownPrize: Double, quantity: Long) = viewModelScope.launch(Dispatchers.IO){
+                             prize: Double, ownPrize: Double, quantity: Long) = viewModelScope.launch(){
         when(val response = productRepository.updateProductDetails(productId, name, numOfImages,
                             description, prize, ownPrize, quantity)){
             is NetworkResponse.Success -> addProductListener.addProductSucceeded(name, productId)
@@ -81,14 +82,14 @@ class ProductsViewModel(private val productRepository: ProductRepository) : View
         }
     }
 
-    fun updateProductQuantity(productId: String, addedQuantity: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateProductQuantity(productId: String, addedQuantity: Int) = viewModelScope.launch() {
         when(val response = productRepository.incrementProductQuantity(productId, addedQuantity)){
             is NetworkResponse.Success -> productsListener.updateProductSucceed()
             is NetworkResponse.Failure -> productsListener.anyError(response.errorCode, response.errorBody)
         }
     }
 
-    fun downloadImages(product: Product, productPos: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun downloadImages(product: Product, productPos: Int) = viewModelScope.launch() {
         val responses = Array(product.numOfImages.toInt()){ i ->
             productRepository.downloadImage(product.productId, i)
         }
@@ -101,9 +102,16 @@ class ProductsViewModel(private val productRepository: ProductRepository) : View
         }
     }
 
-    fun downloadImage(productId: String, photoIndex: Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun downloadImage(productId: String, photoIndex: Int) = viewModelScope.launch {
         when (val response = productRepository.downloadImage(productId, photoIndex)){
             is NetworkResponse.Success -> imageListener.downloadImage(response.value, productId, photoIndex)
+            is NetworkResponse.Failure -> imageListener.anyError(response.errorCode, response.errorBody)
+        }
+    }
+
+    fun imageUri(productId: String, photoIndex: Int) = viewModelScope.launch {
+        when (val response = productRepository.getImageDownloadUri(productId, photoIndex)){
+            is NetworkResponse.Success -> imageListener.imageUri(response.value, productId, photoIndex)
             is NetworkResponse.Failure -> imageListener.anyError(response.errorCode, response.errorBody)
         }
     }
@@ -114,9 +122,16 @@ class ProductsViewModel(private val productRepository: ProductRepository) : View
         }
     }
 
-    private fun uploadImage(productId: String, photoIndex: Int, byteArray: ByteArray) = viewModelScope.launch(Dispatchers.IO) {
+    private fun uploadImage(productId: String, photoIndex: Int, byteArray: ByteArray) = viewModelScope.launch {
         when(val response = productRepository.uploadImage(productId, photoIndex, byteArray)){
             is NetworkResponse.Failure -> addProductListener.anyError(response.errorCode, response.errorBody)
         }
     }
+
+//    fun update() = viewModelScope.launch{
+//        when(productRepository.update()){
+//            is NetworkResponse.Success -> productsListener.anyError(null, ErrorResponse("Success"))
+//            is NetworkResponse.Failure -> productsListener.anyError(null, ErrorResponse("Fail"))
+//        }
+//    }
 }

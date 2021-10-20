@@ -3,6 +3,7 @@ package com.dosu.sellu.ui.selling
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.graphics.drawable.AnimatedVectorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -121,6 +122,8 @@ class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListene
         summaryPrize = prize
         if(!binding.toggleBtn.isChecked) binding.prize.setText(prize.toString())
     }
+
+    override fun imageUri(uri: Uri?, productId: String, imagePos: Int) {}
 
     override fun downloadImage(byteArray: ByteArray, productId: String, imagePos: Int) {
         val pos = adapter.products.indexOf(adapter.products.find {p -> p.productId==productId})

@@ -1,5 +1,6 @@
 package com.dosu.sellu.data.network.product
 
+import android.net.Uri
 import com.dosu.sellu.data.network.FirebaseService
 import com.dosu.sellu.data.network.NetworkResponse
 import com.dosu.sellu.data.network.product.model.Product
@@ -49,7 +50,16 @@ class ProductRepository(private val firebaseService: FirebaseService): BaseRepos
         firebaseService.uploadImage(refString, byteArray)
     }
 
+    suspend fun getImageDownloadUri(productId: String, photoIndex: Int) = safeApiCall {
+        val refString = "$PRODUCTS/$productId/$photoIndex.jpg"
+        firebaseService.getImageDownloadUri(refString)
+    }
+
+//    suspend fun update() = safeApiCall{
+//        firebaseService.update()
+//    }
+
     companion object {
-        private const val PRODUCTS = "products"
+        const val PRODUCTS = "products"
     }
 }

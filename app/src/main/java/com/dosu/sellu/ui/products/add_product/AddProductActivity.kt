@@ -2,6 +2,7 @@ package com.dosu.sellu.ui.products.add_product
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.Toast
@@ -103,6 +104,8 @@ class AddProductActivity : AppCompatActivity(), DIAware, AddProductListener, Ima
         this.product = product
         updateUIWithProduct()
     }
+
+    override fun imageUri(uri: Uri?, productId: String, imagePos: Int) {}
 
     override fun downloadImage(byteArray: ByteArray, productId: String, imagePos: Int){}
 
