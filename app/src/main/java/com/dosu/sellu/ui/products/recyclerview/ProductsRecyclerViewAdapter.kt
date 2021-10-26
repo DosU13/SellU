@@ -8,26 +8,27 @@ import android.net.Uri
 import android.text.InputType
 import android.text.SpannableString
 import android.text.style.RelativeSizeSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.dosu.sellu.R
 import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.ui.products.add_product.AddProductActivity
-import com.dosu.sellu.ui.products.util.ImageListener
 import com.dosu.sellu.ui.products.viewmodel.ProductsViewModel
-import com.dosu.sellu.util.*
+import com.dosu.sellu.util.SellU
+import com.dosu.sellu.util.dp
+import com.dosu.sellu.util.loadImage
+import com.dosu.sellu.util.price
 import com.google.android.material.shape.CornerFamily
 
 class ProductsRecyclerViewAdapter(private val context: Context?,
                                   private val productsViewModel: ProductsViewModel)
-    : RecyclerView.Adapter<ProductItemViewHolder>(), ImageListener {
+    : RecyclerView.Adapter<ProductItemViewHolder>() {
     private val mInflater = LayoutInflater.from(context)
     var products: List<Product> = emptyList()
 
@@ -42,9 +43,9 @@ class ProductsRecyclerViewAdapter(private val context: Context?,
         holder.image.shapeAppearanceModel = holder.image.shapeAppearanceModel.toBuilder().
             setTopLeftCorner(CornerFamily.ROUNDED, radius).setBottomLeftCorner(CornerFamily.ROUNDED, radius).build()
         holder.name.text = product.name
-        if(product.numOfImages > 0) productsViewModel.imageUri(product.productId, 0)
+        product.thumbnail?.let{holder.image.loadImage(context!!, Uri.parse(it))}
         holder.prize.text = product.prize.price
-        val quantityStr = "${context?.getString(R.string.text_quantity)} ${product.quantity}"
+        val quantityStr = "${context!!.getString(R.string.text_quantity)} ${product.quantity}"
         val quantity = SpannableString(quantityStr)
         quantity.setSpan(RelativeSizeSpan(1.618f), 5, quantityStr.length, 0)
         holder.quantity.text = quantity
@@ -73,8 +74,7 @@ class ProductsRecyclerViewAdapter(private val context: Context?,
     private fun updateDetails(pos: Int, holder: ProductItemViewHolder) {
         holder.run {
             val p = products[pos]
-            productsViewModel.downloadImages(p, pos)
-            description.text = p.description
+            description.text = p.description ?: SellU.res.getString(R.string.empty)
             ownPrize.text = p.ownPrize.price
             val todaySoldInt = productsViewModel.todaySold(p)
             val todaySoldStr = SpannableString(todaySoldInt.toString())
@@ -87,7 +87,7 @@ class ProductsRecyclerViewAdapter(private val context: Context?,
                 intent.putExtra("productId", p.productId)
                 context?.startActivity(intent)
             }
-            setImageListeners(context!!, recyclerView, p.numOfImages.toInt())
+            setImageViewPager(context!!, p.images)
         }
     }
 
@@ -114,34 +114,5 @@ class ProductsRecyclerViewAdapter(private val context: Context?,
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         this.recyclerView = recyclerView
-    }
-
-    override fun downloadImages(byteArrays: Array<ByteArray>, productPos: Int) {
-        if(expandedPos == productPos) {
-            expandedHolder?.let { holder ->
-                for ((index, byteArr) in byteArrays.withIndex())
-                    holder.images[index].setImageDrawable(byteArr.toDrawable(context!!.resources))
-            }
-        }
-    }
-
-    override fun imageUri(uri: Uri?, productId: String, imagePos: Int) {
-        if(imagePos==0) {
-            val pos = products.indexOf(products.find { it.productId == productId })
-            (recyclerView.findViewHolderForAdapterPosition(pos) as ProductItemViewHolder)
-                .image.loadImage(context!!, uri)
-        }
-    }
-
-    override fun downloadImage(byteArray: ByteArray, productId: String, imagePos: Int) {
-//        if(imagePos==0) {
-//            val pos = products.indexOf(products.find { it.productId == productId })
-//            (recyclerView.findViewHolderForAdapterPosition(pos) as ProductItemViewHolder)
-//                .image.setImageDrawable(byteArray.toDrawable(context!!.resources))
-//        }
-    }
-
-    override fun anyError(code: Int?, responseBody: ErrorResponse?) {
-        Log.e("ProductsRecyclerAdapter", responseBody?.detail?:"no detail",null)
     }
 }

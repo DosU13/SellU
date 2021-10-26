@@ -2,6 +2,7 @@ package com.dosu.sellu.ui.user_profile
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,11 +18,13 @@ import com.dosu.sellu.ui.user_profile.util.UserListener
 import com.dosu.sellu.ui.user_profile.viewmodel.UserViewModel
 import com.dosu.sellu.ui.user_profile.viewmodel.UserViewModelFactory
 import com.dosu.sellu.util.ErrorResponse
+import com.dosu.sellu.util.loadImage
 import com.dosu.sellu.util.toByteArray
 import com.dosu.sellu.util.toDrawable
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.android.x.closestDI
@@ -69,7 +72,7 @@ class UserProfileFragment : Fragment(), DIAware, UserListener {
         binding.btn.setOnClickListener { signOut() }
         binding.username.text = user.displayName
         binding.email.text = user.email
-        userViewModel.downloadImage()
+        binding.profilePicture.loadImage(requireContext(), user.photoUrl)
         binding.profilePicture.setOnLongClickListener {setProfilePicture(); true }
     }
 
@@ -112,12 +115,10 @@ class UserProfileFragment : Fragment(), DIAware, UserListener {
         }
     }
 
-    override fun downloadImage(byteArray: ByteArray) {
-        binding.profilePicture.setImageDrawable(byteArray.toDrawable(resources))
-    }
-
-    override fun uploadImageSucceed() {
-        Toast.makeText(context, "success", Toast.LENGTH_SHORT).show()
+    override fun uploadImageSucceed(uri: Uri) {
+        Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        val updates = UserProfileChangeRequest.Builder().setPhotoUri(uri).build()
+        user.updateProfile(updates)
     }
 
     override fun anyError(code: Int?, responseBody: ErrorResponse?) {

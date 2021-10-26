@@ -29,14 +29,14 @@ class HistoryFragment : Fragment(), DIAware, HistoryListener {
     private val binding: HistoryFragmentBinding get() = _binding!!
     private lateinit var adapter: HistoryRecyclerViewAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = HistoryFragmentBinding.inflate(inflater, container, false)
         historyViewModel = ViewModelProvider(this, historyViewModelFactory).get(HistoryViewModel::class.java)
         historyViewModel.setListener(this)
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter =  HistoryRecyclerViewAdapter(context)
+        adapter =  HistoryRecyclerViewAdapter(context, historyViewModel)
         recyclerView.adapter = adapter
         historyViewModel.getHSellingList()
         return binding.root

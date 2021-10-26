@@ -1,6 +1,7 @@
 package com.dosu.sellu.ui.selling.util
 
 import android.content.Context
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,18 +10,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dosu.sellu.R
 import com.dosu.sellu.data.network.product.model.Product
-import com.dosu.sellu.ui.products.viewmodel.ProductsViewModel
 import com.dosu.sellu.ui.selling.viewmodel.SellingViewModel
 import com.dosu.sellu.util.dp
+import com.dosu.sellu.util.loadImage
 import com.dosu.sellu.util.price
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.CornerFamily
 
 class SellingRecyclerViewAdapter(
     private val context: Context?,
-    private val productsViewModel: ProductsViewModel,
     private val sellingViewModel: SellingViewModel)
                             : RecyclerView.Adapter<SellingRecyclerViewAdapter.ViewHolder>() {
+
     private val mInflater = LayoutInflater.from(context)
     var products: List<Product> = emptyList()
 
@@ -34,7 +35,7 @@ class SellingRecyclerViewAdapter(
         val radius = 5.0.dp
         holder.image.shapeAppearanceModel = holder.image.shapeAppearanceModel.toBuilder().
             setTopLeftCorner(CornerFamily.ROUNDED, radius).setBottomLeftCorner(CornerFamily.ROUNDED, radius).build()
-        productsViewModel.downloadImage(p.productId, 0)
+        holder.image.loadImage(context!!, Uri.parse(p.images[0]))
         holder.productName.text = p.name
         holder.prize.text = p.prize.price
         holder.quantityMinus.setOnClickListener {

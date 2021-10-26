@@ -1,6 +1,6 @@
 package com.dosu.sellu.data.network.product
 
-import android.net.Uri
+import android.util.Log
 import com.dosu.sellu.data.network.FirebaseService
 import com.dosu.sellu.data.network.NetworkResponse
 import com.dosu.sellu.data.network.product.model.Product
@@ -24,9 +24,8 @@ class ProductRepository(private val firebaseService: FirebaseService): BaseRepos
         firebaseService.addProduct(product)
     }
 
-    suspend fun updateProductDetails(productId: String, name: String, numOfImages: Long, description: String,
-                                     prize: Double, ownPrize: Double, quantity: Long) = safeApiCall{
-        firebaseService.updateProductDetails(productId, name, numOfImages, description, prize, ownPrize, quantity)
+    suspend fun updateProductFields(productId: String, field: String, value: Any?, vararg moreFieldsAndValues: Any?) = safeApiCall{
+        firebaseService.updateProductFields(productId, field, value, *moreFieldsAndValues)
     }
 
     suspend fun updateProductTodaySold(productId: String, todayDate: Date, todaySold: Int) = safeApiCall {
@@ -43,6 +42,11 @@ class ProductRepository(private val firebaseService: FirebaseService): BaseRepos
     suspend fun downloadImage(productId: String, photoIndex: Int) = safeApiCall {
         val refString = "$PRODUCTS/$productId/$photoIndex.jpg"
         firebaseService.downloadImage(refString)
+    }
+
+    suspend fun uploadThumbnail(productId: String, byteArray: ByteArray) = safeApiCall {
+        val refString = "$PRODUCTS/$productId/thumbnail.jpg"
+        firebaseService.uploadImage(refString, byteArray)
     }
 
     suspend fun uploadImage(productId: String, photoIndex: Int, byteArray: ByteArray) = safeApiCall {

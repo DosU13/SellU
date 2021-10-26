@@ -1,16 +1,17 @@
-package com.dosu.sellu.ui.stat.viewmodel
+package com.dosu.sellu.ui.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dosu.sellu.R
 import com.dosu.sellu.data.network.NetworkResponse
 import com.dosu.sellu.data.network.product.ProductRepository
 import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.data.network.selling.SellingRepository
 import com.dosu.sellu.data.network.selling.model.Selling
-import com.dosu.sellu.ui.stat.model.Stat
-import com.dosu.sellu.ui.stat.util.StatListener
+import com.dosu.sellu.ui.home.model.Stat
+import com.dosu.sellu.ui.home.util.StatListener
+import com.dosu.sellu.util.SellU
 import com.dosu.sellu.util.mmddyy
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class StatViewModel(private val productRepository: ProductRepository,
@@ -39,7 +40,7 @@ class StatViewModel(private val productRepository: ProductRepository,
     }
 
     private var stats = mutableListOf<Stat>()
-    fun statistics() = viewModelScope.launch() {
+    fun statistics() = viewModelScope.launch {
         stats = mutableListOf()
         var stat = Stat(sellingList[0].time.mmddyy)
         for(selling in sellingList){
@@ -50,8 +51,9 @@ class StatViewModel(private val productRepository: ProductRepository,
             stat.money+=selling.prize
             for(entry in selling.products) {
                 products.find { it.productId == entry.key }?.let {
-                    stat.outcome += it.ownPrize
+                    stat.outcome += it.ownPrize*entry.value
                 }
+                stat.count += entry.value
             }
         }
         stats.add(stat)
@@ -59,33 +61,37 @@ class StatViewModel(private val productRepository: ProductRepository,
         singleStat()
     }
 
-    fun statistics(productPos: Int) = viewModelScope.launch{
-        stats = mutableListOf()
-        var stat = Stat(sellingList[0].time.mmddyy)
-        for(selling in sellingList){
-            if(stat.date != selling.time.mmddyy){
-                stats.add(stat)
-                stat = Stat(selling.time.mmddyy)
-            }
-            val pId = products[productPos].productId
-            for(entry in selling.products) {
-                if(pId == entry.key){
-                    stat.count += entry.value
-                }
-            }
-            //selling.products[pId]?.let { stat.count+=it }
-        }
-        stats.add(stat)
-        listener.statsReady(stats)
-        singleStat()
-    }
-
-    private var singleStat: Stat = Stat("all")
-    private fun singleStat() = viewModelScope.launch() {
+    private var todayStat: Stat? = null
+    private var allStat: Stat = Stat("all")
+    private fun singleStat() = viewModelScope.launch {
         for(stat in stats){
-            singleStat.money += stat.money
-            singleStat.outcome += stat.money
+            if(stat.date == SellU.res.getString(R.string.today)) todayStat = stat
+            allStat.money += stat.money
+            allStat.outcome += stat.outcome
+            allStat.count += stat.count
         }
-        listener.singleStat(singleStat)
+        listener.singleStat(todayStat, allStat)
     }
 }
+
+//
+//fun statistics(productPos: Int) = viewModelScope.launch{
+//    stats = mutableListOf()
+//    var stat = Stat(sellingList[0].time.mmddyy)
+//    for(selling in sellingList){
+//        if(stat.date != selling.time.mmddyy){
+//            stats.add(stat)
+//            stat = Stat(selling.time.mmddyy)
+//        }
+//        val pId = products[productPos].productId
+//        for(entry in selling.products) {
+//            if(pId == entry.key){
+//                stat.count += entry.value
+//            }
+//        }
+//        //selling.products[pId]?.let { stat.count+=it }
+//    }
+//    stats.add(stat)
+//    listener.statsReady(stats)
+//    singleStat()
+//}

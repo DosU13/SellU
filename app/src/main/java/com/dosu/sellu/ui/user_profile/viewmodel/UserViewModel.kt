@@ -14,16 +14,9 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         this.listener = listener
     }
 
-    fun downloadImage() = viewModelScope.launch {
-        when(val response = userRepository.downloadUserImage()){
-            is NetworkResponse.Success -> listener.downloadImage(response.value)
-            is NetworkResponse.Failure -> listener.anyError(response.errorCode, response.errorBody)
-        }
-    }
-
     fun uploadImage(byteArray: ByteArray) = viewModelScope.launch{
         when(val response = userRepository.uploadUserImage(byteArray)){
-            is NetworkResponse.Success -> listener.uploadImageSucceed()
+            is NetworkResponse.Success -> listener.uploadImageSucceed(response.value)
             is NetworkResponse.Failure -> listener.anyError(response.errorCode, response.errorBody)
         }
     }

@@ -5,23 +5,31 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.TransitionDrawable
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.text.SpannableString
 import android.text.format.DateUtils
 import android.text.style.RelativeSizeSpan
+import android.transition.Transition
 import android.widget.ImageView
+import androidx.appcompat.content.res.AppCompatResources
 import com.bumptech.glide.Glide
+import com.bumptech.glide.TransitionOptions
 import com.dosu.sellu.R
 import com.google.firebase.Timestamp
 import java.io.ByteArrayOutputStream
 import java.util.*
 
 fun ImageView.loadImage(context: Context, uri: Uri?){
-    Glide.with(context).load(uri).into(this)
+    val anim = AppCompatResources.getDrawable(context, R.drawable.animated_loading)
+            as AnimatedVectorDrawable
+    anim.start()
+    Glide.with(context).load(uri).placeholder(anim).into(this)
 }
 
 fun ByteArray.toDrawable(resources: Resources): Drawable {
@@ -34,7 +42,7 @@ fun Uri.toByteArray(context: Context): ByteArray{
 
 @Suppress("DEPRECATION")
 fun Uri.toThumbnailByteArray(context: Context): ByteArray{
-    val cSIZE = 144
+    val cSIZE = 240
     val bitmap = if(Build.VERSION.SDK_INT < 28) MediaStore.Images.Media.getBitmap(context.contentResolver, this)
                 else ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, this))
     val bW = bitmap.width
@@ -54,6 +62,12 @@ val Double.price: SpannableString get() {
     val span = if(this == this.toInt().toDouble()) SpannableString("${this.toInt()} сом")
         else SpannableString("$this сом")
     span.setSpan(RelativeSizeSpan(1.618f), 0,this.toInt().toString().length, 0)
+    return span
+}
+
+val String.enlarge: SpannableString get() {
+    val span = SpannableString(this)
+    span.setSpan(RelativeSizeSpan(1.618f), 0, span.length, 0)
     return span
 }
 

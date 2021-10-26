@@ -4,7 +4,6 @@ import android.net.Uri
 import com.dosu.sellu.util.ErrorResponse
 
 interface UserListener {
-    fun downloadImage(byteArray: ByteArray)
-    fun uploadImageSucceed()
+    fun uploadImageSucceed(uri: Uri)
     fun anyError(code: Int?, responseBody: ErrorResponse?)
 }

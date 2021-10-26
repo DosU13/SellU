@@ -50,6 +50,13 @@
     <string name="reason">Причины(Пр:скидка)</string>
     <string name="today_sold">Сегодня проданно:</string>
     <string name="today_income">Сегодняшний прибыль</string>
+    <string name="empty">Пусто</string>
+    <string name="number_of_sold_items">Количество проданных проуктов</string>
+    <string name="total_income">Общий прибыль</string>
+    <string name="total_money">Общая сумма</string>
+    <string name="all">Все</string>
+    <string name="loading">загрузка...</string>
+    <string name="thumbnailSuccess">thumbnail successfully uploaded</string>
     <string-array name="month">
         <item>Январь</item>
         <item>Февраль</item>

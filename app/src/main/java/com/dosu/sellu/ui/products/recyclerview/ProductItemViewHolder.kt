@@ -1,18 +1,22 @@
 package com.dosu.sellu.ui.products.recyclerview
 
 import android.content.Context
+import android.graphics.drawable.AnimatedVectorDrawable
+import android.net.Uri
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.AutoTransition
-import androidx.transition.TransitionManager
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.dosu.sellu.R
-import com.dosu.sellu.ui.products.util.OnSwipeTouchListener
-import com.dosu.sellu.util.dp
+import com.dosu.sellu.util.loadImage
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.tabs.TabLayout
 
 
 class ProductItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -24,94 +28,41 @@ class ProductItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
     val expBtn: Button = itemView.findViewById(R.id.product_expand_btn)
     val details: LinearLayout = itemView.findViewById(R.id.details)
 
-    private val carousel: LinearLayout = itemView.findViewById(R.id.carousel)
-    val images = arrayOf<ImageView>(
-        itemView.findViewById(R.id.image0),
-        itemView.findViewById(R.id.image1),
-        itemView.findViewById(R.id.image2),
-        itemView.findViewById(R.id.image3),
-        itemView.findViewById(R.id.image4))
+    private val carousel: ViewPager = itemView.findViewById(R.id.carousel)
+    private val tabIndicator: TabLayout = itemView.findViewById(R.id.tab_indicator)
     val description: TextView = itemView.findViewById(R.id.description)
     val ownPrize: TextView = itemView.findViewById(R.id.own_prize)
     val todaySold: TextView = itemView.findViewById(R.id.today_sold)
     val todayIncome: TextView = itemView.findViewById(R.id.today_income)
     val changeBtn: Button = itemView.findViewById(R.id.change_btn)
 
-    private var imgIt = 0
-    fun setImageSwipes(context: Context, parent: RecyclerView, imageCount: Int) {
-        if(imageCount < 4) for(i in (imageCount)..4){
-            images[i].visibility = View.GONE
-        }
-        when (imageCount) {
-            0 -> carousel.visibility = View.GONE
-            1 -> expandImg(0)
-            else -> {
-                val swipeTouchListener = object : OnSwipeTouchListener(context) {
-                    override fun onSwipeLeft() {
-                        if (imgIt > 0) {
-                            shrinkImg(imgIt)
-                            imgIt--
-                            expandImg(imgIt)
-                            val autoTransition = AutoTransition()
-                            autoTransition.duration = 150
-                            TransitionManager.beginDelayedTransition(parent, autoTransition)
-                        }
-                    }
-
-                    override fun onSwipeRight() {
-                        if (imgIt < imageCount - 1) {
-                            shrinkImg(imgIt)
-                            imgIt++
-                            expandImg(imgIt)
-                            val autoTransition = AutoTransition()
-                            autoTransition.duration = 150
-                            TransitionManager.beginDelayedTransition(parent, autoTransition)
-                        }
-                    }
-                }
-                carousel.setOnTouchListener(swipeTouchListener)
-                for(i in 0 until imageCount) images[i].setOnTouchListener(swipeTouchListener)
-            }
+    fun setImageViewPager(context: Context, images: List<String?>) {
+        if (images.isEmpty()) carousel.visibility = View.GONE
+        else {
+            val adapter = MyAdapter(context, images)
+            carousel.adapter = adapter
+            if(images.size > 1)tabIndicator.setupWithViewPager(carousel)
         }
     }
 
-    fun setImageListeners(context: Context, parent: RecyclerView, imageCount: Int) {
-        if(imageCount < 5) for(i in imageCount..4){
-            images[i].visibility = View.GONE
+    class MyAdapter(private val context: Context, private val images: List<String?>
+    ): PagerAdapter() {
+        override fun instantiateItem(container: View, position: Int): Any {
+            val imageView = ImageView(context)
+            (container as ViewPager).addView(imageView, 0)
+            imageView.loadImage(context, Uri.parse(images[position]))
+            return imageView
         }
-        when (imageCount) {
-            0 -> carousel.visibility = View.GONE
-            1 -> expandImg(0)
-            else -> {
-                for(i in 0 until imageCount) images[i].setOnClickListener {
-                    if(imgIt != i){
-                        shrinkImg(imgIt)
-                        imgIt = i
-                        expandImg(imgIt)
-                        val autoTransition = AutoTransition()
-                        autoTransition.duration = 300
-                        TransitionManager.beginDelayedTransition(parent, autoTransition)
-                    }
-                }
-            }
+
+        override fun getCount(): Int {
+            return images.size
         }
-    }
 
-    private fun shrinkImg(index: Int){
-        val imgView = images[index]
-        //imgView.scaleType = ImageView.ScaleType.CENTER_CROP
-        val params = imgView.layoutParams as LinearLayout.LayoutParams
-        params.weight = 0f
-        params.width = 10.0.dp.toInt()
-        imgView.layoutParams = params
-    }
+        override fun isViewFromObject(view: View, `object`: Any): Boolean {
+            return view == (`object` as View)
+        }
 
-    private fun expandImg(index: Int){
-        val imgView = images[index]
-        //imgView.scaleType = ImageView.ScaleType.FIT_CENTER
-        val params = imgView.layoutParams as LinearLayout.LayoutParams
-        params.weight = 1f
-        params.width = 0
-        imgView.layoutParams = params
+        override fun destroyItem(container: View, position: Int, `object`: Any) {
+        }
     }
 }

@@ -16,9 +16,9 @@
     <LinearLayout
         android:background="@drawable/tile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="200dp">
 
-        <ImageView
+        <com.dosu.sellu.ui.custom_view.SquareImageView
             android:id="@+id/image0"
             android:layout_width="0dp"
             android:layout_height="200dp"
@@ -30,13 +30,13 @@
             android:layout_height="200dp"
             android:layout_weight="1"
             android:orientation="vertical">
-            <ImageView
+            <com.dosu.sellu.ui.custom_view.SquareImageView
                 android:id="@+id/image1"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:src="@drawable/ic_baseline_shopping_bag_24"/>
-            <ImageView
+            <com.dosu.sellu.ui.custom_view.SquareImageView
                 android:id="@+id/image3"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -48,13 +48,13 @@
             android:layout_height="200dp"
             android:layout_weight="1"
             android:orientation="vertical">
-            <ImageView
+            <com.dosu.sellu.ui.custom_view.SquareImageView
                 android:id="@+id/image2"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:src="@drawable/ic_baseline_shopping_bag_24"/>
-            <ImageView
+            <com.dosu.sellu.ui.custom_view.SquareImageView
                 android:id="@+id/image4"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

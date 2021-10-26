@@ -3,7 +3,6 @@ package com.dosu.sellu.ui.selling
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.graphics.drawable.AnimatedVectorDrawable
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,26 +17,22 @@ import androidx.transition.TransitionManager
 import com.dosu.sellu.R
 import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.databinding.SellingFragmentBinding
-import com.dosu.sellu.ui.products.util.ImageListener
 import com.dosu.sellu.ui.products.util.ProductsListener
 import com.dosu.sellu.ui.products.viewmodel.ProductsViewModel
 import com.dosu.sellu.ui.products.viewmodel.ProductsViewModelFactory
 import com.dosu.sellu.ui.selling.util.AddSellingListener
 import com.dosu.sellu.ui.selling.util.SellingRecyclerViewAdapter
 import com.dosu.sellu.ui.selling.viewmodel.SellingViewModel
-import com.dosu.sellu.ui.selling.viewmodel.SellingViewModelFactory
 import com.dosu.sellu.util.ErrorResponse
-import com.dosu.sellu.util.toDrawable
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.android.x.closestDI
 import org.kodein.di.instance
 
-class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListener, ImageListener {
+class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListener{
     private var _binding: SellingFragmentBinding? = null
     private val binding get() = _binding!!
     override val di: DI by closestDI()
-    //private val sellingViewModelFactory: SellingViewModelFactory by instance()
     private val sellingViewModel: SellingViewModel by instance()
     private val productsViewModelFactory: ProductsViewModelFactory by instance()
     private lateinit var productsViewModel: ProductsViewModel
@@ -46,16 +41,14 @@ class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListene
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = SellingFragmentBinding.inflate(inflater, container, false)
-        //sellingViewModel = ViewModelProvider(this, sellingViewModelFactory).get(SellingViewModel::class.java)
         sellingViewModel.setListener(this)
         sellingViewModel.getSummaryPrize()
         productsViewModel = ViewModelProvider(this, productsViewModelFactory).get(ProductsViewModel::class.java)
         productsViewModel.setListener(this as ProductsListener)
-        productsViewModel.setListener(this as ImageListener)
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter =  SellingRecyclerViewAdapter(context, productsViewModel, sellingViewModel)
+        adapter =  SellingRecyclerViewAdapter(context, sellingViewModel)
         recyclerView.adapter = adapter
         productsViewModel.getProducts()
         binding.toggleBtn.setOnCheckedChangeListener{ _, checked ->
@@ -121,18 +114,6 @@ class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListene
     override fun getSummaryPrize(prize: Double) {
         summaryPrize = prize
         if(!binding.toggleBtn.isChecked) binding.prize.setText(prize.toString())
-    }
-
-    override fun imageUri(uri: Uri?, productId: String, imagePos: Int) {}
-
-    override fun downloadImage(byteArray: ByteArray, productId: String, imagePos: Int) {
-        val pos = adapter.products.indexOf(adapter.products.find {p -> p.productId==productId})
-        val viewHolder = binding.recyclerView.findViewHolderForAdapterPosition(pos) as SellingRecyclerViewAdapter.ViewHolder
-        viewHolder.image.setImageDrawable(byteArray.toDrawable(resources))
-    }
-
-    override fun downloadImages(byteArrays: Array<ByteArray>, productPos: Int) {
-
     }
 
     override fun anyError(code: Int?, responseBody: ErrorResponse?) {

@@ -1,4 +1,4 @@
-package com.dosu.sellu.ui.stat.model
+package com.dosu.sellu.ui.home.model
 
 data class Stat(
     val date: String,

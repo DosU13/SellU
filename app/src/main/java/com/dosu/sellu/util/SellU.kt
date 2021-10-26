@@ -8,7 +8,7 @@ import com.dosu.sellu.data.network.product.ProductRepository
 import com.dosu.sellu.data.network.selling.SellingRepository
 import com.dosu.sellu.data.network.user.UserRepository
 import com.dosu.sellu.ui.history.viewmodel.HistoryViewModelFactory
-import com.dosu.sellu.ui.stat.viewmodel.StatViewModelFactory
+import com.dosu.sellu.ui.home.viewmodel.StatViewModelFactory
 import com.dosu.sellu.ui.products.viewmodel.ProductsViewModelFactory
 import com.dosu.sellu.ui.selling.viewmodel.SellingViewModel
 import com.dosu.sellu.ui.selling.viewmodel.SellingViewModelFactory

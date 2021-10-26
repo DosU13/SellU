@@ -1,4 +1,4 @@
-package com.dosu.sellu.ui.stat.viewmodel
+package com.dosu.sellu.ui.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

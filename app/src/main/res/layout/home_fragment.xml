@@ -10,33 +10,81 @@
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/tile"
+        android:layout_margin="3dp"
+        android:padding="5dp">
+        <TextView
+            android:textSize="28sp"
+            android:textAlignment="center"
+            android:text="@string/today"/>
+        <View android:layout_height="1dp"
+            android:background="@color/text" />
         <TableRow>
             <TextView
-                android:text="Number of sells"
-                android:layout_weight="2"/>
+                android:paddingStart="0dp"
+                android:paddingEnd="10dp"
+                android:text="@string/number_of_sold_items"/>
             <TextView
-                android:id="@+id/sells"
-                android:layout_weight="1"/>
+                android:id="@+id/today_sold"/>
         </TableRow>
+        <View android:layout_height="1dp"
+            android:background="@color/text" />
         <TableRow>
             <TextView
-                android:text="Total income"
-                android:layout_weight="2"/>
+                android:text="@string/total_money"/>
             <TextView
-                android:id="@+id/income"
-                android:layout_weight="1"/>
+                android:id="@+id/today_money"/>
+        </TableRow>
+        <View android:layout_height="1dp"
+            android:background="@color/text" />
+        <TableRow>
+            <TextView
+                android:text="@string/total_income"/>
+            <TextView
+                android:id="@+id/today_income"/>
+        </TableRow>
+
+        <TextView
+            android:textSize="28sp"
+            android:textAlignment="center"
+            android:text="@string/all"/>
+        <View android:layout_height="1dp"
+            android:background="@color/text" />
+        <TableRow>
+            <TextView
+                android:text="@string/number_of_sold_items"/>
+            <TextView
+                android:id="@+id/all_sold"/>
+        </TableRow>
+        <View android:layout_height="1dp"
+            android:background="@color/text" />
+        <TableRow>
+            <TextView
+                android:text="@string/total_money"/>
+            <TextView
+                android:id="@+id/all_money"/>
+        </TableRow>
+        <View android:layout_height="1dp"
+            android:background="@color/text" />
+        <TableRow>
+            <TextView
+                android:text="@string/total_income"/>
+            <TextView
+                android:id="@+id/all_income"/>
         </TableRow>
     </TableLayout>
 
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/tile">
-        <com.dosu.sellu.ui.stat.StatCanvas
+        android:layout_height="match_parent">
+        <com.dosu.sellu.ui.home.util.StatCanvas
             android:id="@+id/canvas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"/>
+            android:layout_margin="3dp"
+            android:padding="5dp"
+            android:background="@drawable/tile"/>
     </ScrollView>
 </LinearLayout>

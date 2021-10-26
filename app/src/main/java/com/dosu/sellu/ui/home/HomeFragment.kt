@@ -1,6 +1,8 @@
 package com.dosu.sellu.ui.home
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.RelativeSizeSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +10,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.dosu.sellu.databinding.HomeFragmentBinding
-import com.dosu.sellu.ui.stat.model.Stat
-import com.dosu.sellu.ui.stat.util.StatListener
-import com.dosu.sellu.ui.stat.viewmodel.StatViewModel
-import com.dosu.sellu.ui.stat.viewmodel.StatViewModelFactory
+import com.dosu.sellu.ui.home.model.Stat
+import com.dosu.sellu.ui.home.util.StatListener
+import com.dosu.sellu.ui.home.viewmodel.StatViewModel
+import com.dosu.sellu.ui.home.viewmodel.StatViewModelFactory
 import com.dosu.sellu.util.ErrorResponse
+import com.dosu.sellu.util.enlarge
+import com.dosu.sellu.util.price
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.android.x.closestDI
@@ -46,9 +50,19 @@ class HomeFragment : Fragment(), StatListener, DIAware {
         statViewModel.statistics()
     }
 
-    override fun singleStat(singleStat: Stat) {
-        binding.sells.text = singleStat.money.toString()
-        binding.income.text = (singleStat.money - singleStat.outcome).toString()
+    override fun singleStat(todayStat: Stat?, allStat: Stat) {
+        if(todayStat!=null) {
+            binding.todaySold.text = todayStat.count.toString().enlarge
+            binding.todayMoney.text = todayStat.money.price
+            binding.todayIncome.text = (todayStat.money - todayStat.outcome).price
+        }else{
+            binding.todaySold.text = "0".enlarge
+            binding.todayMoney.text = 0.0.price
+            binding.todayIncome.text = 0.0.price
+        }
+        binding.allSold.text = allStat.count.toString().enlarge
+        binding.allMoney.text = allStat.money.price
+        binding.allIncome.text = (allStat.money - allStat.outcome).price
     }
 
     override fun statsReady(stats: MutableList<Stat>) {

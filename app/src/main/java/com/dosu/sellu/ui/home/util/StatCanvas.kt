@@ -1,4 +1,4 @@
-package com.dosu.sellu.ui.stat
+package com.dosu.sellu.ui.home.util
 
 import android.content.Context
 import android.graphics.*
@@ -10,7 +10,7 @@ import android.util.TypedValue
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.dosu.sellu.R
-import com.dosu.sellu.ui.stat.model.Stat
+import com.dosu.sellu.ui.home.model.Stat
 
 class StatCanvas(
     context: Context,

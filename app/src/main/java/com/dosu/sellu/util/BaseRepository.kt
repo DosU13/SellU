@@ -23,7 +23,7 @@ abstract class BaseRepository {
                 NetworkResponse.Success(apiCall.invoke())
             }catch (e: Exception){
                 e.printStackTrace()
-                Log.e(Companion.TAG, "safeApiCall: NetworkResponse Failure${this.javaClass.name}", e)
+                Log.e(TAG, "safeApiCall: NetworkResponse Failure ${this.javaClass.name}", e)
                 NetworkResponse.Failure(false, null, null)
             }catch (throwable: Throwable) {
                 throwable.printStackTrace()

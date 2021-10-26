@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
+import androidx.annotation.NonNull
 import com.dosu.sellu.data.network.product.ProductRepository
 import com.dosu.sellu.data.network.product.model.Product
 import com.dosu.sellu.data.network.product.model.Product.Companion.toProduct
@@ -46,11 +47,8 @@ class FirebaseService {
         return db.collection(productsRef).add(product).await().id
     }
 
-    suspend fun updateProductDetails(productId: String, name: String, numOfImages: Long, description: String,
-                                     prize: Double, ownPrize: Double, quantity: Long){
-        db.collection(productsRef).document(productId).update(
-            "name", name, "numOfImages", numOfImages, "description", description,
-            "prize", prize, "ownPrize", ownPrize, "quantity", quantity).await()
+    suspend fun updateProductFields(productId: String, field: String, value: Any?, vararg moreFieldsAndValues: Any?){
+        db.collection(productsRef).document(productId).update(field, value, *moreFieldsAndValues).await()
     }
 
     suspend fun updateProductTodaySold(productId: String, todayDate: Date, todaySold: Long){
@@ -73,9 +71,9 @@ class FirebaseService {
         db.collection(sellingRef).add(selling).await()
     }
 
-    suspend fun uploadImage(refString: String, byteArray: ByteArray){
+    suspend fun uploadImage(refString: String, byteArray: ByteArray): Uri{
         val imgRef = storageRef.child(IMG_REF+refString)
-        imgRef.putBytes(byteArray).await()
+        return imgRef.putBytes(byteArray).await().storage.downloadUrl.await()
     }
 
     suspend fun downloadImage(refString: String): ByteArray{
@@ -83,7 +81,7 @@ class FirebaseService {
         return imgRef.getBytes(MAX_BYTES).await()
     }
 
-    suspend fun getImageDownloadUri(refString: String): Uri? {
+    suspend fun getImageDownloadUri(refString: String): Uri{
         val imgRef = storageRef.child(IMG_REF+refString)
         return imgRef.downloadUrl.await()
     }

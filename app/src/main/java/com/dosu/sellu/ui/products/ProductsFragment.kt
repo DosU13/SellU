@@ -43,7 +43,6 @@ class ProductsFragment : Fragment(), DIAware, ProductsListener{
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = ProductsRecyclerViewAdapter(context, productsViewModel)
-        productsViewModel.setListener(adapter)
         recyclerView.adapter = adapter
 
         productsViewModel.getProducts()
