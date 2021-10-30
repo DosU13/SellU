@@ -23,7 +23,7 @@ class SellingRecyclerViewAdapter(
                             : RecyclerView.Adapter<SellingRecyclerViewAdapter.ViewHolder>() {
 
     private val mInflater = LayoutInflater.from(context)
-    var products: List<Product> = emptyList()
+    var products: MutableList<Product> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = mInflater.inflate(R.layout.fragment_product_item_in_selling, parent, false)

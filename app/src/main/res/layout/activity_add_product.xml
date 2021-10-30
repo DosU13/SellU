@@ -13,55 +13,134 @@
         android:padding="15dp"
         android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@drawable/tile"
+        android:padding="5dp"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="wrap_content">
 
-        <com.dosu.sellu.ui.custom_view.SquareImageView
-            android:id="@+id/image0"
+        <com.dosu.sellu.ui.custom_view.SquareLayout
+            android:id="@+id/layout0"
             android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:layout_weight="2"
-            android:src="@drawable/ic_baseline_shopping_bag_24"/>
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/layout1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="0.5">
+            <ImageView
+                android:id="@+id/image0"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_baseline_shopping_bag_24"
+                android:scaleType="centerCrop"/>
+            <ImageButton
+                android:id="@+id/remove0"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.5"
+                android:src="@drawable/ic_baseline_delete_24"/>
+        </com.dosu.sellu.ui.custom_view.SquareLayout>
 
-        <LinearLayout
+        <com.dosu.sellu.ui.custom_view.SquareLayout
+            android:id="@+id/layout1"
             android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <com.dosu.sellu.ui.custom_view.SquareImageView
+            android:layout_height="0dp"
+            app:layout_constraintStart_toEndOf="@id/layout0"
+            app:layout_constraintEnd_toStartOf="@id/layout2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_weight="0.25"
+            app:layout_constraintVertical_weight="0.5">
+            <ImageView
                 android:id="@+id/image1"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:src="@drawable/ic_baseline_shopping_bag_24"/>
-            <com.dosu.sellu.ui.custom_view.SquareImageView
-                android:id="@+id/image3"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_baseline_shopping_bag_24"
+                android:scaleType="centerCrop"/>
+            <ImageButton
+                android:id="@+id/remove1"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:src="@drawable/ic_baseline_shopping_bag_24"/>
-        </LinearLayout>
-        <LinearLayout
+                android:layout_height="match_parent"
+                android:alpha="0.5"
+                android:src="@drawable/ic_baseline_delete_24"/>
+        </com.dosu.sellu.ui.custom_view.SquareLayout>
+
+        <com.dosu.sellu.ui.custom_view.SquareLayout
+            android:id="@+id/layout2"
             android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <com.dosu.sellu.ui.custom_view.SquareImageView
+            android:layout_height="0dp"
+            app:layout_constraintStart_toEndOf="@id/layout1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/layout4"
+            app:layout_constraintHorizontal_weight="0.25"
+            app:layout_constraintVertical_weight="0.5">
+            <ImageView
                 android:id="@+id/image2"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:src="@drawable/ic_baseline_shopping_bag_24"/>
-            <com.dosu.sellu.ui.custom_view.SquareImageView
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_baseline_shopping_bag_24"
+                android:scaleType="centerCrop"/>
+            <ImageButton
+                android:id="@+id/remove2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.5"
+                android:src="@drawable/ic_baseline_delete_24"/>
+        </com.dosu.sellu.ui.custom_view.SquareLayout>
+
+        <com.dosu.sellu.ui.custom_view.SquareLayout
+            android:id="@+id/layout3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toEndOf="@id/layout0"
+            app:layout_constraintEnd_toStartOf="@id/layout4"
+            app:layout_constraintTop_toBottomOf="@id/layout1"
+            app:layout_constraintHorizontal_weight="0.25"
+            app:layout_constraintVertical_weight="0.5">
+            <ImageView
+                android:id="@+id/image3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_baseline_shopping_bag_24"
+                android:scaleType="centerCrop"/>
+            <ImageButton
+                android:id="@+id/remove3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.5"
+                android:src="@drawable/ic_baseline_delete_24"/>
+        </com.dosu.sellu.ui.custom_view.SquareLayout>
+
+        <com.dosu.sellu.ui.custom_view.SquareLayout
+            android:id="@+id/layout4"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toEndOf="@id/layout3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout2"
+            app:layout_constraintHorizontal_weight="0.25"
+            app:layout_constraintVertical_weight="0.5">
+            <ImageView
                 android:id="@+id/image4"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:src="@drawable/ic_baseline_shopping_bag_24"/>
-        </LinearLayout>
-    </LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_baseline_shopping_bag_24"
+                android:scaleType="centerCrop"/>
+            <ImageButton
+                android:id="@+id/remove4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.5"
+                android:src="@drawable/ic_baseline_delete_24"/>
+        </com.dosu.sellu.ui.custom_view.SquareLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -180,5 +259,4 @@
         android:layout_marginBottom="10dp"
         android:text="@string/add_product"/>
     </LinearLayout>
-
 </ScrollView>

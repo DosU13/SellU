@@ -1,12 +1,15 @@
 package com.dosu.sellu.ui.products
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,24 +45,42 @@ class ProductsFragment : Fragment(), DIAware, ProductsListener{
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = ProductsRecyclerViewAdapter(context, productsViewModel)
+        adapter = object : ProductsRecyclerViewAdapter(context, productsViewModel){
+            override fun editProduct(productId: String, position: Int) {
+                val intent = Intent(context, AddProductActivity::class.java)
+                intent.putExtra("isNewProduct", false)
+                intent.putExtra("productId", productId)
+                intent.putExtra("product_position", position)
+                addProductLauncher.launch(intent)
+            }
+        }
+        adapter.setHasStableIds(true)
         recyclerView.adapter = adapter
-
         productsViewModel.getProducts()
         binding.addBtn.setOnClickListener{addBtnClicked() }
-
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        productsViewModel.getProducts()
+    @SuppressLint("NotifyDataSetChanged")
+    private val addProductLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
+        Log.e("Here", "result")
+        if(result.resultCode == Activity.RESULT_OK){
+            Log.e("Here", "result ok")
+            result.data?.run{
+                Log.e("Here", this.toString())
+                val productId = getStringExtra("productId")
+                val productPos = getIntExtra("product_position", -1)
+                if(productPos==-1) productsViewModel.getProducts()
+                else productId?.let { productsViewModel.getProduct(it, productPos) }
+                Log.e("Here", "$productId $productPos")
+            }
+        }
     }
 
     private fun addBtnClicked() {
         val intent = Intent(context, AddProductActivity::class.java)
         intent.putExtra("isNewProduct", true)
-        startActivity(intent)
+        addProductLauncher.launch(intent)
     }
 
     override fun onDestroyView() {
@@ -69,12 +90,19 @@ class ProductsFragment : Fragment(), DIAware, ProductsListener{
 
     @SuppressLint("NotifyDataSetChanged")
     override fun getProducts(products: List<Product>) {
-        adapter.products = products
+        Toast.makeText(context, "products returned", Toast.LENGTH_SHORT).show() //TODO()
+        adapter.products = products as MutableList<Product>
         adapter.notifyDataSetChanged()
     }
 
-    override fun updateProductSucceed() {
-        adapter.notifyDataSetChanged()
+    override fun getProduct(product: Product, productPos: Int) {
+        adapter.products[productPos] = product
+        adapter.notifyItemChanged(productPos)
+    }
+
+    override fun updateProductSucceed(position: Int, product: Product) {
+        adapter.products[position] = product
+        adapter.notifyItemChanged(position)
     }
 
     override fun anyError(code: Int?, responseBody: ErrorResponse?) {

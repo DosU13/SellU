@@ -75,9 +75,9 @@ class SellingViewModel(private val sellingRepository: SellingRepository, private
             is NetworkResponse.Failure -> addListener.anyError(response.errorCode, response.errorBody)
         }
         product?.let {
-            val response = if (DateUtils.isToday(it.todayDate.time))
-                                productRepository.incrementProductTodaySold(productId, quantityDecrement)
-                else productRepository.updateProductTodaySold(productId, Calendar.getInstance().time, quantityDecrement)
+            val response = if (DateUtils.isToday(it.lastSoldDay.time))
+                                productRepository.incrementProductLastDaySold(productId, quantityDecrement)
+                else productRepository.updateProductLastDaySold(productId, Calendar.getInstance().time, quantityDecrement)
             if (response is NetworkResponse.Failure)
                 addListener.anyError(response.errorCode, response.errorBody)
         }

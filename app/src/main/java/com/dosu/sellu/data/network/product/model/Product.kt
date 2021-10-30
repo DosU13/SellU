@@ -1,5 +1,6 @@
 package com.dosu.sellu.data.network.product.model
 
+import android.text.format.DateUtils
 import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 import java.util.*
@@ -13,8 +14,8 @@ data class Product(
     val prize: Double,
     val quantity: Long,
     val ownPrize: Double,
-    val todayDate: Date,
-    val todaySold: Long
+    val lastSoldDay: Date,
+    val lastDaySold: Long
 ){
     companion object{
         @Suppress("UNCHECKED_CAST")
@@ -27,10 +28,10 @@ data class Product(
                 val prize = String.format("%.2f", getDouble("prize")!!).toDouble()
                 val quantity = getLong("quantity")!!
                 val ownPrize = String.format("%.2f", getDouble("ownPrize")!!).toDouble()
-                val todayDate = getDate("todayDate")!!
-                val todaySold = getLong("todaySold")!!
+                val lastSoldDay = getDate("todayDate")!!
+                val lastDaySold = if(DateUtils.isToday(lastSoldDay.time)) getLong("todaySold")!! else 0
                 Product(id, name, thumbnail, images, description, prize, quantity
-                    ,ownPrize, todayDate, todaySold)
+                    ,ownPrize, lastSoldDay, lastDaySold)
             } catch (e: Exception) {
                 Log.e(TAG, "Error converting product", e)
 //                FirebaseCrashlytics.getInstance().log("Error converting user profile")

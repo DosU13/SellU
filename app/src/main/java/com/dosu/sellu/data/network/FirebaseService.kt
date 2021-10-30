@@ -59,12 +59,14 @@ class FirebaseService {
         db.collection(productsRef).document(productId).update("todaySold", FieldValue.increment(increment)).await()
     }
 
-    suspend fun updateProductQuantity(productId: String, addedQuantity: Long) {
+    suspend fun updateProductQuantity(productId: String, addedQuantity: Long): Product{
         db.collection(productsRef).document(productId).update("quantity", FieldValue.increment(addedQuantity)).await()
+        return getProduct(productId)
     }
 
     suspend fun getSellingList(): List<Selling>{
-        return db.collection(sellingRef).orderBy("time", Query.Direction.DESCENDING).get().await().documents.mapNotNull { it.toSelling() }
+        return db.collection(sellingRef).orderBy("time", Query.Direction.DESCENDING).get().await()
+            .documents.mapNotNull { it.toSelling() }
     }
 
     suspend fun addSelling(selling: SellingWithoutId){

@@ -28,10 +28,10 @@ class ProductRepository(private val firebaseService: FirebaseService): BaseRepos
         firebaseService.updateProductFields(productId, field, value, *moreFieldsAndValues)
     }
 
-    suspend fun updateProductTodaySold(productId: String, todayDate: Date, todaySold: Int) = safeApiCall {
+    suspend fun updateProductLastDaySold(productId: String, todayDate: Date, todaySold: Int) = safeApiCall {
         firebaseService.updateProductTodaySold(productId, todayDate, todaySold.toLong())
     }
-    suspend fun incrementProductTodaySold(productId: String, increment:Int) = safeApiCall {
+    suspend fun incrementProductLastDaySold(productId: String, increment:Int) = safeApiCall {
         firebaseService.incrementProductTodaySold(productId, increment.toLong())
     }
 

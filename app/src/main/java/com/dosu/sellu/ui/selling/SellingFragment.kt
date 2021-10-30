@@ -100,13 +100,19 @@ class SellingFragment : Fragment(), DIAware, AddSellingListener, ProductsListene
         getSummaryPrize(0.0)
     }
 
+    override fun getProduct(product: Product, productPos: Int) {
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     override fun getProducts(products: List<Product>) {
-        adapter.products = products
+        adapter.products = products as MutableList<Product>
         adapter.notifyDataSetChanged()
     }
 
-    override fun updateProductSucceed() {
-        adapter.notifyDataSetChanged()
+    override fun updateProductSucceed(position: Int, product: Product) {
+        adapter.products[position] = product
+        adapter.notifyItemChanged(position)
     }
 
     private var summaryPrize = 0.0
